@@ -3,7 +3,7 @@
 This asset brings the concept of Modular Entities into Unity Engine.
 
 When needed, inherit from `ModularBehaviour` instead of Unity's default `MonoBehaviour` class.
-This lets you **split** all the logic inside your behaviour and **move** it to independent modules, which could be later connected to/removed from each instance of that behaviour, using the inspector GUI:
+This lets you **split** all the logic inside your behaviour and **move** it to independent modules, which could later be connected to/removed from each instance of that behaviour, using the inspector GUI:
 
 ![modula2](https://user-images.githubusercontent.com/26601205/157162945-b4b174e2-c7ce-4d8c-af3d-d07a0f27f20b.gif)
 
