@@ -1,4 +1,4 @@
-![modula-logo](https://user-images.githubusercontent.com/26601205/157159980-73a91493-e3e9-4080-8e5b-6cfb23bb25e9.png)
+![modula-banner5](https://user-images.githubusercontent.com/26601205/157169291-1604022b-12e5-4708-b990-b2951ab3245a.png)
 ## About
 This asset brings the concept of Modular Entities into Unity Engine.
 
