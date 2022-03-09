@@ -17,7 +17,7 @@ To create a basic module, simply derive from `Module` class. As we imagine, a mo
 - Engine/Transmission of a car
 - Camera setup for the player
 - Shooting logic for guns in your awesome FPS ;)
-### Usage
+### Example Usage
 _Imagine,_ you have the same setup for human characters that could run around a level in your game. The only difference is - most of them are controlled by AI and the last one is the player. By properly issuing the approach Modula offers you, changing that little part of how each 'human' is controlled should be straightforward :).
 
 ### Notice from the creator
