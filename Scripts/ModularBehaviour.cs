@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Modula
@@ -42,7 +43,15 @@ namespace Modula
 
         public void AddModule(Type moduleType)
         {
-            var module = gameObject.AddComponent(moduleType) as IModule;
+            IModule module;
+            if (Application.isEditor && !Application.isPlaying)
+            {
+                module = Undo.AddComponent(gameObject, moduleType) as IModule;
+            }
+            else
+            {
+                module = gameObject.AddComponent(moduleType) as IModule;
+            }
             AddModule(module);
         }
 
@@ -107,7 +116,8 @@ namespace Modula
             {
                 Debug.Log(string.Concat("Removing module: ", module.GetType().Name,
                     ", reason: ", GetReasonString(reason), " (class ", GetType().Name, ")"), gameObject);
-                DestroyImmediate(module as MonoBehaviour);
+                Undo.DestroyObjectImmediate(module as MonoBehaviour);
+                //DestroyImmediate(module as MonoBehaviour);
             }
             else
             {
