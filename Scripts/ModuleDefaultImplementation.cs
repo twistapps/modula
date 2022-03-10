@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Modula.Optimizations;
+using UnityEngine;
+
+namespace Modula
+{
+    public partial class ModuleDefaultImplementation
+    {
+        private readonly IModule _boundModule;
+        private List<IModule> _modules;
+
+        private TimingConstraints _updateConstraints;
+
+        public ModuleDefaultImplementation(IModule bind)
+        {
+            _boundModule = bind;
+        }
+
+        public ModularBehaviour Parent { get; private set; }
+
+        public TimingConstraints UpdateConstraints
+        {
+            get { return _updateConstraints ??= new TimingConstraints(_boundModule.ModuleUpdate); }
+        }
+
+        public void OnAdd()
+        {
+            Parent = _boundModule.GetComponent<ModularBehaviour>();
+            _modules = FindComponents<IModule>().ToList();
+            var hasRequiredOtherModules = _boundModule.RequiredOtherModules?.Types != null;
+            if (hasRequiredOtherModules)
+                foreach (var type in _boundModule.RequiredOtherModules.Types)
+                {
+                    var isMissing = true;
+                    foreach (var attachedModule in _modules)
+                        if (attachedModule.GetType() == type)
+                            isMissing = false;
+                    if (isMissing) AddModule(type);
+                }
+        }
+
+        public void AddModule(Type moduleType)
+        {
+            //var module = _bind.gameObject.AddComponent(moduleType) as IModule;
+            //modules.Add(module);
+            Parent.AddModule(moduleType);
+        }
+
+        public string GetName()
+        {
+            return _boundModule.GetType().Name;
+        }
+
+        public DataLayer GetData()
+        {
+            return Parent.GetData();
+        }
+
+        public void Update()
+        {
+            UpdateConstraints.Update(Time.deltaTime);
+        }
+    }
+}
