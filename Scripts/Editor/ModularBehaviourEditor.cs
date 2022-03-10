@@ -18,9 +18,8 @@ namespace Modula.Editor
             else
             {
                 EditorGUILayout.HelpBox(new GUIContent("Modules"));
-                var TextStyle = new GUIStyle();
-                TextStyle.normal.textColor = Color.gray;
-                GUILayout.Label("This ModularNetBehaviour has no available modules set up.", TextStyle);
+                var textStyle = new GUIStyle {normal = {textColor = Color.gray}};
+                GUILayout.Label("This ModularNetBehaviour has no available modules set up.", textStyle);
             }
 
             ShowDebugInfo();
@@ -43,9 +42,8 @@ namespace Modula.Editor
                 {
                     var requiredLabel = "Dependencies: ";
                     foreach (var other in requiredOthers) requiredLabel += other.Name + "  ";
-                    var TextStyle = new GUIStyle();
-                    TextStyle.normal.textColor = Color.gray;
-                    GUILayout.Label(requiredLabel, TextStyle);
+                    var textStyle = new GUIStyle {normal = {textColor = Color.gray}};
+                    GUILayout.Label(requiredLabel, textStyle);
                 }
 
                 if (GUILayout.Button("Remove", GUILayout.Width(80)))
