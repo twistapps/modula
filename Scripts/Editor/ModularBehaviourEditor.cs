@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Modula.Editor
 {
     [CustomEditor(typeof(ModularBehaviour), true)]
-    public class ModularNetBehaviourEditor : UnityEditor.Editor
+    public class ModularBehaviourEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
