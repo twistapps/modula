@@ -77,14 +77,14 @@ namespace Modula
         void GetComponentsInChildren<T>(bool includeInactive, List<T> result);
         T[] GetComponentsInChildren<T>();
         void GetComponentsInChildren<T>(List<T> results);
-        /*  --Removing GetComponentInParent from interface because it gets compillation errors in Unity 2020.3
-         
+        
+        #if UNITY_2021_1_OR_NEWER
          Component GetComponentInParent(Type t, bool includeInactive);
          Component GetComponentInParent(Type t);
          T GetComponentInParent<T>(bool includeInactive);
          T GetComponentInParent<T>();
-         
-        */
+         #endif
+        
         Component[] GetComponentsInParent(Type t, bool includeInactive);
         Component[] GetComponentsInParent(Type t);
         T[] GetComponentsInParent<T>(bool includeInactive);
