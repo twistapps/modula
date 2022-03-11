@@ -15,8 +15,8 @@ namespace Modula
         {
             get { return _defaultImplementation ??= new ModuleDefaultImplementation(this); }
         }
-        
-        public ModularBehaviour Parent { get; }
+
+        public ModularBehaviour Main => DefaultImplementation.Main;
 
         public void OnAdd()
         {

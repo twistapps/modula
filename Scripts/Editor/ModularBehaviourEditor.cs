@@ -112,11 +112,9 @@ namespace Modula.Editor
             var moduleManager = (ModularBehaviour)target;
             var dataLayerType = moduleManager.GetDataLayerType();
             if (dataLayerType == null) return;
-            if (moduleManager.GetData() == null)
-            {
-                var data = moduleManager.gameObject.AddComponent(dataLayerType) as DataLayer;
-                moduleManager.OnDataComponentCreated();
-            }
+            if (moduleManager.GetData() != null) return;
+            var data = moduleManager.gameObject.AddComponent(dataLayerType) as DataLayer;
+            moduleManager.OnDataComponentCreated();
         }
     }
 }

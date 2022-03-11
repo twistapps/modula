@@ -18,7 +18,7 @@ namespace Modula
             _boundModule = bind;
         }
 
-        public ModularBehaviour Parent { get; private set; }
+        public ModularBehaviour Main { get; private set; }
 
         public TimingConstraints UpdateConstraints
         {
@@ -27,7 +27,7 @@ namespace Modula
 
         public void OnAdd()
         {
-            Parent = _boundModule.GetComponent<ModularBehaviour>();
+            Main = _boundModule.GetComponent<ModularBehaviour>();
             _modules = FindComponents<IModule>().ToList();
             var hasRequiredOtherModules = _boundModule.RequiredOtherModules?.Types != null;
             if (hasRequiredOtherModules)
@@ -45,7 +45,7 @@ namespace Modula
         {
             //var module = _bind.gameObject.AddComponent(moduleType) as IModule;
             //modules.Add(module);
-            Parent.AddModule(moduleType);
+            Main.AddModule(moduleType);
         }
 
         public string GetName()
@@ -55,7 +55,7 @@ namespace Modula
 
         public DataLayer GetData()
         {
-            return Parent.GetData();
+            return Main.GetData();
         }
 
         public void Update()

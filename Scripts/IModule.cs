@@ -14,7 +14,7 @@ namespace Modula
         #region Modula
 
         TypeList RequiredOtherModules { get; }
-        ModularBehaviour Parent { get; }
+        ModularBehaviour Main { get; }
         void OnAdd();
         void AddModule(Type moduleType);
         string GetName();
