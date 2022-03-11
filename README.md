@@ -10,8 +10,8 @@ This lets you **split** all the logic inside your behaviour and **move** it to i
 
 That way by splitting the code into small self-containing modules you could make the codebase cleaner and easier to understand.
 
-# Setup
-`work in progress`
+# Installation
+**[See Documentation](http://modula.twistapps.com/install)**
 
 ## Creating Modules
 To create a basic module, simply derive from `Module` class. As we imagine, a module should represent a relatively small self-contained part of your bigger entity/behaviour, such as:
