@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/twistapps/modula/compare/0.2.0...0.2.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* rename Parent > Main and fix ref in Module.cs ([ded4ab1](https://github.com/twistapps/modula/commit/ded4ab1ee49aa9e690a44a833d09929903a8b0f1))
+
 # [0.2.0](https://github.com/twistapps/modula/compare/v0.1.0...0.2.0) (2022-03-10)
 
 
