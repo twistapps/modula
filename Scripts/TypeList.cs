@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Modula
 {
+    [Serializable]
     public class TypeList
     {
-        private bool _hasTypes;
-        public List<Type> Types { get; } = new List<Type>();
+        [SerializeField] private bool _hasTypes;
+        [SerializeField] public List<Type> Types { get; } = new List<Type>();
 
         public static TypeList None => new TypeList();
 

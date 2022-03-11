@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Modula.ConditionalFieldDraw
+namespace Modula
 {
     /// <summary>
     ///     Draws the field/property ONLY if the compared property compared by the comparison type with the value of

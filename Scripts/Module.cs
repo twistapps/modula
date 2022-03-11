@@ -1,26 +1,21 @@
 using System;
-using Modula.Optimizations;
+using Modula.Optimization;
 using UnityEngine;
 
 namespace Modula
 {
     public abstract class Module : MonoBehaviour, IModule
     {
+        public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
+        public virtual TypeList RequiredOtherModules { get; } = TypeList.None;
+        
         private ModuleDefaultImplementation _defaultImplementation;
-
+        // ReSharper disable once MemberCanBePrivate.Global
         protected ModuleDefaultImplementation DefaultImplementation
         {
             get { return _defaultImplementation ??= new ModuleDefaultImplementation(this); }
         }
-
-        public virtual void Update()
-        {
-            DefaultImplementation.Update();
-        }
-
-        public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
-        public virtual TypeList RequiredOtherModules { get; } = TypeList.None;
-
+        
         public ModularBehaviour Parent { get; }
 
         public void OnAdd()
@@ -45,6 +40,11 @@ namespace Modula
 
         public virtual void ModuleUpdate()
         {
+        }
+
+        public virtual void Update()
+        {
+            DefaultImplementation.Update();
         }
     }
 }

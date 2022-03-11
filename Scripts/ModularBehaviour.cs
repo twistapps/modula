@@ -45,13 +45,9 @@ namespace Modula
         {
             IModule module;
             if (Application.isEditor && !Application.isPlaying)
-            {
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
-            }
             else
-            {
                 module = gameObject.AddComponent(moduleType) as IModule;
-            }
             AddModule(module);
         }
 
@@ -63,7 +59,7 @@ namespace Modula
 
         public T GetModule<T>() where T : IModule
         {
-            return (T) _modules.First(m => m.GetType() == typeof(T));
+            return (T)_modules.First(m => m.GetType() == typeof(T));
         }
 
         private string GetReasonString(ModuleRemoveReason reason)

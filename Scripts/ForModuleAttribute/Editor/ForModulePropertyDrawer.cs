@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Modula.ConditionalFieldDraw.Editor
+namespace Modula.Editor
 {
     /// <summary>
     ///     Based on: https://forum.unity.com/threads/draw-a-field-only-if-a-condition-is-met.448855/
@@ -52,7 +52,7 @@ namespace Modula.ConditionalFieldDraw.Editor
         {
             forModule = attribute as ForModuleAttribute;
 
-            var obj = (MonoBehaviour) property.serializedObject.targetObject;
+            var obj = (MonoBehaviour)property.serializedObject.targetObject;
             var requiredComponent = obj.GetComponent(forModule.targetComponent);
             return requiredComponent != null;
         }

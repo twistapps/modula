@@ -1,4 +1,4 @@
-namespace Modula.ConditionalFieldDraw
+namespace Modula
 {
     public enum ComparisonType
     {

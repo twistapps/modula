@@ -10,7 +10,7 @@ namespace Modula.Editor
     {
         public override void OnInspectorGUI()
         {
-            var moduleManager = (ModularBehaviour) target;
+            var moduleManager = (ModularBehaviour)target;
             if (moduleManager.AvailableModules != null)
             {
                 ModuleManager();
@@ -18,7 +18,7 @@ namespace Modula.Editor
             else
             {
                 EditorGUILayout.HelpBox(new GUIContent("Modules"));
-                var textStyle = new GUIStyle {normal = {textColor = Color.gray}};
+                var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
                 GUILayout.Label("This ModularNetBehaviour has no available modules set up.", textStyle);
             }
 
@@ -28,7 +28,7 @@ namespace Modula.Editor
 
         private void ModuleManager()
         {
-            var moduleManager = (ModularBehaviour) target;
+            var moduleManager = (ModularBehaviour)target;
 
             EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
             var hasAttachedModules = false;
@@ -42,7 +42,7 @@ namespace Modula.Editor
                 {
                     var requiredLabel = "Dependencies: ";
                     foreach (var other in requiredOthers) requiredLabel += other.Name + "  ";
-                    var textStyle = new GUIStyle {normal = {textColor = Color.gray}};
+                    var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
                     GUILayout.Label(requiredLabel, textStyle);
                 }
 
@@ -83,7 +83,7 @@ namespace Modula.Editor
 
         private void ShowDebugInfo()
         {
-            var moduleManager = (ModularBehaviour) target;
+            var moduleManager = (ModularBehaviour)target;
             GUILayout.Space(20);
             ModulaSettings.DebugMode = EditorGUILayout.Toggle(new GUIContent("Modular Entities Debug Mode"),
                 ModulaSettings.DebugMode);
@@ -92,11 +92,24 @@ namespace Modula.Editor
 
             foreach (var module in moduleManager.GetModules())
                 module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
+            
+            // potential bugfix
+            // if (ModulaSettings.DebugMode)
+            // {
+            //     foreach (var component in moduleManager.GetComponents(typeof(Component)))
+            //         component.hideFlags = HideFlags.None;
+            //     base.OnInspectorGUI();
+            // }
+            // else
+            // {
+            //     foreach (var module in moduleManager.GetModules())
+            //         module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
+            // }
         }
 
         private void HandleDataLayer()
         {
-            var moduleManager = (ModularBehaviour) target;
+            var moduleManager = (ModularBehaviour)target;
             var dataLayerType = moduleManager.GetDataLayerType();
             if (dataLayerType == null) return;
             if (moduleManager.GetData() == null)

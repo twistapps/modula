@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Modula.Optimizations;
+using Modula.Optimization;
 using UnityEngine;
 
 namespace Modula

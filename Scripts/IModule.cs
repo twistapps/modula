@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Modula.Optimizations;
+using Modula.Optimization;
 using UnityEngine;
 
 namespace Modula
@@ -77,14 +77,14 @@ namespace Modula
         void GetComponentsInChildren<T>(bool includeInactive, List<T> result);
         T[] GetComponentsInChildren<T>();
         void GetComponentsInChildren<T>(List<T> results);
-        
-        #if UNITY_2021_1_OR_NEWER
+
+#if UNITY_2021_1_OR_NEWER
          Component GetComponentInParent(Type t, bool includeInactive);
          Component GetComponentInParent(Type t);
          T GetComponentInParent<T>(bool includeInactive);
          T GetComponentInParent<T>();
-         #endif
-        
+#endif
+
         Component[] GetComponentsInParent(Type t, bool includeInactive);
         Component[] GetComponentsInParent(Type t);
         T[] GetComponentsInParent<T>(bool includeInactive);

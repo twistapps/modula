@@ -1,6 +1,7 @@
 ﻿using System;
+using UnityEngine;
 
-namespace Modula.Optimizations
+namespace Modula.Optimization
 {
     public class TimingConstraints
     {
@@ -46,7 +47,12 @@ namespace Modula.Optimizations
             _constrainedAction();
         }
 
-        public void Update(float deltaTime = 0)
+        public void Update()
+        {
+            Update(Time.deltaTime);
+        }
+
+        public void Update(float deltaTime)
         {
             if (!_constrainFrames && !_constrainSeconds)
             {
