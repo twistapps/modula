@@ -38,7 +38,7 @@ namespace Modula
         {
             _modules.Add(module);
             module.OnAdd();
-            OnModulesUpdate();
+            UpdateModules();
         }
 
         public void AddModule(Type moduleType)
@@ -53,7 +53,7 @@ namespace Modula
 
         public List<IModule> GetModules()
         {
-            OnModulesUpdate();
+            UpdateModules();
             return _modules;
         }
 
@@ -121,7 +121,7 @@ namespace Modula
             }
         }
 
-        private void OnModulesUpdate()
+        private void UpdateModules()
         {
             _modules = gameObject.FindComponents<IModule>();
             //_modules = GetComponents<Module>().ToList();
