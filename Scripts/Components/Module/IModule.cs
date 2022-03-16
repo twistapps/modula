@@ -20,8 +20,7 @@ namespace Modula
         string GetName();
         DataLayer GetData();
 
-        void ModuleUpdate();
-        //void ManagedUpdate();
+        void ManagedUpdate();
         TimingConstraints UpdateInvocationConstraints { get; }
 
         #endregion

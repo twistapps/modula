@@ -13,11 +13,5 @@ namespace Modula.Examples
             UpdateInvocationConstraints.SetFrames(15);
             UpdateInvocationConstraints.SetSeconds(3.5f);
         }
-
-
-        public override void ModuleUpdate()
-        {
-            base.ModuleUpdate();
-        }
     }
 }

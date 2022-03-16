@@ -22,7 +22,7 @@ namespace Modula
 
         public TimingConstraints UpdateConstraints
         {
-            get { return _updateConstraints ??= new TimingConstraints(_boundModule.ModuleUpdate); }
+            get { return _updateConstraints ??= new TimingConstraints(_boundModule.ManagedUpdate); }
         }
 
         public void OnAdd()
@@ -37,6 +37,7 @@ namespace Modula
                     foreach (var attachedModule in _modules)
                         if (attachedModule.GetType() == type)
                             isMissing = false;
+                    
                     if (isMissing) AddModule(type);
                 }
         }
