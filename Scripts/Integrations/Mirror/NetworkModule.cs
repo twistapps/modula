@@ -29,9 +29,9 @@ namespace Modula
             DefaultImplementation.OnAdd();
         }
 
-        public void AddModule(Type moduleType)
+        public void OnModuleAdded(Type moduleType)
         {
-            DefaultImplementation.AddModule(moduleType);
+            DefaultImplementation.OnModuleAdded(moduleType);
         }
 
         public string GetName()
@@ -44,7 +44,7 @@ namespace Modula
             return DefaultImplementation.GetData();
         }
 
-        public virtual void ModuleUpdate()
+        public virtual void ManagedUpdate()
         {
         }
     }
