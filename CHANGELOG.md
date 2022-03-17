@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/twistapps/modula/compare/0.3.0...0.3.1) (2022-03-17)
+
+
+### Bug Fixes
+
+* rename ModuleUpdate -> ManagedUpdate ([4a68545](https://github.com/twistapps/modula/commit/4a68545d40c59136899990da893f4ca896d16cfb))
+
 # [0.3.0](https://github.com/twistapps/modula/compare/0.2.1...0.3.0) (2022-03-17)
 
 
