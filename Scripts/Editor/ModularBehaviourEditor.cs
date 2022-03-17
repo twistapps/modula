@@ -116,10 +116,5 @@ namespace Modula.Editor
             var data = moduleManager.gameObject.AddComponent(dataLayerType) as DataLayer;
             moduleManager.OnDataComponentCreated();
         }
-        
-        void OnInspectorUpdate()
-        {
-            Repaint();
-        }
     }
 }

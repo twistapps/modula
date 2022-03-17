@@ -13,14 +13,13 @@ namespace Modula
     {
         #region Modula
 
-        TypedList<IModule> RequiredOtherModules { get; }
+        TypeList RequiredOtherModules { get; }
         ModularBehaviour Main { get; }
         void OnAdd();
         void AddModule(Type moduleType);
         string GetName();
         DataLayer GetData();
-
-        void ManagedUpdate();
+        void ModuleUpdate();
         TimingConstraints UpdateInvocationConstraints { get; }
 
         #endregion

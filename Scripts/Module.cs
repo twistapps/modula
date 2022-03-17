@@ -6,10 +6,8 @@ namespace Modula
 {
     public abstract class Module : MonoBehaviour, IModule
     {
-        public virtual TypeList replaces { get; } = TypeList.None;
-
         public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
-        public virtual TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>();
+        public virtual TypeList RequiredOtherModules { get; } = TypeList.None;
         
         private ModuleDefaultImplementation _defaultImplementation;
         // ReSharper disable once MemberCanBePrivate.Global
@@ -40,9 +38,6 @@ namespace Modula
             return DefaultImplementation.GetData();
         }
 
-        // public virtual void ManagedUpdate()
-        // {
-        // }
         public virtual void ModuleUpdate()
         {
         }
