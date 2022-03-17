@@ -7,7 +7,7 @@ namespace Modula.Common
 {
     public static class ModulaUtilities
     {
-        //cache results of GetDerivedFrom because it's a pretty expensive method
+        //cache results of GetDerivedFrom() because it's a pretty expensive method
         private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new Dictionary<Type, Type[]>();
 
         public static Type[] GetDerivedFrom<T>(Type[] ignored = null)

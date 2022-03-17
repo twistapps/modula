@@ -9,24 +9,17 @@ namespace Modula
 {
     public abstract class ModularBehaviour : MonoBehaviour
     {
-        //public PropertyModule properties;
         private List<IModule> _modules;
 
         public abstract TypedList<IModule> AvailableModules { get; }
 
-        private bool CouldBeenModifiedFromEditorUI => ModulaSettings.DebugMode;
-        //public abstract Type[] GetAvailableModules();
+        private bool couldBeModifiedFromEditorUI => ModulaSettings.DebugMode;
 
         public DataLayer GetData()
         {
             return GetComponent<DataLayer>();
         }
-
-        // public PropertyModule GetProperties()
-        // {
-        //     return properties;
-        // }
-
+        
         public virtual Type GetDataLayerType()
         {
             return null;
@@ -36,7 +29,7 @@ namespace Modula
         {
         }
 
-        public void OnModuleAdded(IModule module)
+        private void OnModuleAdded(IModule module)
         {
             _modules.Add(module);
             module.OnAdd();
@@ -78,33 +71,33 @@ namespace Modula
             }
         }
 
+        //todo: recursively check dependencies of dependencies
         public bool CanRemove(IModule module)
         {
-            return _modules.All(m =>
-            {
-                if (m.RequiredOtherModules == null)
-                    return true;
-                return !m.RequiredOtherModules.Contains(module.GetType());
-            });
+            // return _modules.All(m =>
+            // {
+            //     var required = m.RequiredOtherModules;
+            //     return required == null || !required.Contains(module.GetType());
+            // });
+
+            return FindDependent(module).Length > 0;
         }
 
         public IModule[] FindDependent(IModule module)
         {
-            return _modules.Where(m =>
+            var dependent = _modules.Where(m =>
             {
-                if (m.RequiredOtherModules == null)
-                    return false;
-                return m.RequiredOtherModules.Contains(module.GetType());
-            }).ToArray();
+                var required = m.RequiredOtherModules;
+                return required != null && required.Contains(module.GetType());
+            });
+            
+            return dependent.ToArray();
         }
 
         public string[] FindDependentModuleNames(IModule module)
         {
             var dependent = FindDependent(module);
-            var names = new List<string>();
-            foreach (var netModule in dependent) names.Add(netModule.GetName());
-
-            return names.ToArray();
+            return dependent.Select(m => m.GetName()).ToArray();
         }
 
         public void RemoveModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
@@ -148,7 +141,7 @@ namespace Modula
             //_modules = GetComponents<Module>().ToList();
             foreach (var module in _modules)
             {
-                if (CouldBeenModifiedFromEditorUI)
+                if (couldBeModifiedFromEditorUI)
                     // check if user did remove a module using Unity Editor GUI. If yes, return;
                     // because ResolveDependencies implicitly calls UpdateModules() again if _modules has been modified.
                     if (ResolveDependencies(module))

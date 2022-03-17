@@ -1,4 +1,6 @@
-﻿using Modula.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Modula.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,16 +9,6 @@ namespace Modula.Editor
     [CustomEditor(typeof(Template), true)]
     public class TemplateEditor : UnityEditor.Editor
     {
-        // private bool CheckBaseparts<T>(List<T> baseparts)
-        // {
-        //     if (baseparts == null || baseparts.Count == 0)
-        //     {
-        //         return false;
-        //     }
-        //
-        //     return baseparts.Any(basepart => basepart != null);
-        // }
-
         private TypeNames<IModule> _selections;
 
         public override void OnInspectorGUI()
@@ -24,14 +16,27 @@ namespace Modula.Editor
             base.OnInspectorGUI();
 
             var template = (Template)target;
-            BasepartSelector(template);
+            DrawBasepartSelectors(template);
 
             // GUILayout.Space(20);
             // ModulaSettings.EditMode = EditorGUILayout.Toggle(new GUIContent("Edit Mode"),
             //     ModulaSettings.EditMode);
         }
 
-        private void BasepartSelector(Template template)
+        // private bool HasBasepartsWithContent(List<BasePart> baseparts)
+        // {
+        //     foreach (var bp in baseparts)
+        //     {
+        //         if (bp != null && !ModulaUtilities.IsNullOrEmpty(bp.supports))
+        //         {
+        //             return true;
+        //         }
+        //
+        //         return false;
+        //     }
+        // }
+
+        private void DrawBasepartSelectors(Template template)
         {
             if (template.scriptable == null)
             {
@@ -45,6 +50,14 @@ namespace Modula.Editor
             if (ModulaUtilities.IsNullOrEmpty(template.scriptable.baseparts))
             {
                 GUILayout.Box("No baseparts specified in this template.");
+                return;
+            }
+
+            //if (!HasBasepartsWithContent(template.scriptable.baseparts))
+            if (!template.AvailableModules.Any())
+            {
+                GUILayout.Box("This template has basepart(s) but these baseparts have no available modules."+
+                              " Please specify at least one supported module in a basepart.");
                 return;
             }
 
@@ -63,16 +76,15 @@ namespace Modula.Editor
 
             for (var i = 0; i < basepartsCount; i++)
             {
-                if (basepartsCount != template.scriptable.baseparts.Count) break;
+                if (basepartsCount != template.scriptable.baseparts.Count) break; //just in case count changes during draw process.
                 var basepart = template.scriptable.baseparts[i];
-                //var supportedByBasepart = new TypeNames<IModule>(basepart.supports.ToArray(), false);
 
                 if (ModulaUtilities.IsNullOrEmpty(basepart.supports)) continue;
 
-                int selectedIndex;
-                selectedIndex = ModulaUtilities.IsNullOrEmpty(_selections!.Types)
+                var selectedIndex = ModulaUtilities.IsNullOrEmpty(_selections!.Types)
                     ? 0
                     : basepart.supports.IndexOf(_selections.GetName(i));
+                
                 if (selectedIndex == -1)
                 {
                     selectedIndex = 0;
@@ -89,45 +101,5 @@ namespace Modula.Editor
                 }
             }
         }
-
-        // private void ModuleSelector(Template template)
-        // {
-        //     TemplateScriptable templateScriptable = template.template;
-        //     if (templateScriptable == null) return;
-        //     GUILayout.Box("Select Modules:");
-        //     var connectedModules = template.GetModules();
-        //     var basepartsCount = templateScriptable.baseparts?.Count() ?? 0;
-        //     var selections = template.selections;
-        //     if (selections == null || selections.Length != basepartsCount)
-        //     {
-        //         template.selections = new Type[basepartsCount];
-        //     }
-        //
-        //     bool selectionsIsEmpty = false;
-        //     foreach (var selection in template.selections)
-        //     {
-        //         if (selection == null) selectionsIsEmpty = true;
-        //     }
-        //
-        //     if (basepartsCount <= 0) return;
-        //     for (int i = 0; i < basepartsCount; i++)
-        //     {
-        //         var basepart = templateScriptable.baseparts[i];
-        //         if ((basepart.supports?.Count() ?? 0) < 1) continue;
-        //         //string[] supports = basepart.supports.Select(mod => mod.Name).ToArray();
-        //         string[] supports = basepart.supports.ToArray();
-        //         string[] selectionsNames = null;
-        //         if (!selectionsIsEmpty) 
-        //         {
-        //             selectionsNames = template.selections.Select(t => t.Name).ToArray();
-        //         }
-        //         int selectedIndex = selectionsNames == null ? 0 : basepart.supports.IndexOf(selectionsNames[i]);
-        //         if (selectedIndex < 0 || selectedIndex >= template.selections.Length) selectedIndex = 0;
-        //         template.selections[i] = ModulaUtilities.GetTypeByName<IModule>(
-        //             basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, supports)]);
-        //     }
-        //
-        //     EditorUtility.SetDirty(template);
-        // }
     }
 }

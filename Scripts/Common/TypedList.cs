@@ -8,7 +8,7 @@ namespace Modula.Common
     [Serializable]
     public class TypedList<T> : IEnumerable<Type>
     {
-        [SerializeField] private bool _hasTypes;
+        [SerializeField] private bool hasTypes;
         [SerializeField] public List<Type> Types { get; } = new List<Type>();
 
         public IEnumerator<Type> GetEnumerator()
@@ -23,18 +23,18 @@ namespace Modula.Common
 
         public bool Contains(Type behaviour)
         {
-            return _hasTypes && Types.Contains(behaviour);
+            return hasTypes && Types.Contains(behaviour);
         }
 
         public bool Contains<TA>() where TA : T
         {
-            return _hasTypes && Types.Contains(typeof(TA));
+            return hasTypes && Types.Contains(typeof(TA));
         }
 
         public TypedList<T> Add<TA>() where TA : T
         {
             Types.Add(typeof(TA));
-            _hasTypes = true;
+            hasTypes = true;
             return this;
         }
 
@@ -43,7 +43,7 @@ namespace Modula.Common
             if (typeof(T).IsAssignableFrom(type) || type.IsSubclassOf(typeof(T)))
             {
                 Types.Add(type);
-                _hasTypes = true;
+                hasTypes = true;
                 return this;
             }
 

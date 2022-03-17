@@ -4,8 +4,6 @@ using UnityEngine;
 namespace Modula
 {
     /// <summary>
-    ///     Draws the field/property ONLY if the compared property compared by the comparison type with the value of
-    ///     comparedValue returns true.
     ///     Based on: https://forum.unity.com/threads/draw-a-field-only-if-a-condition-is-met.448855/
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
