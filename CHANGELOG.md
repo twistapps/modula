@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/twistapps/modula/compare/0.3.1...0.4.0) (2022-03-17)
+
+
+### Features
+
+* Examples for Template System ([#6](https://github.com/twistapps/modula/issues/6)) ([0beaf32](https://github.com/twistapps/modula/commit/0beaf327a3c461de4e01ae39d6959b1ef78d22dd))
+* new utilities (ModulaUtilities, TypeNames) ([19165f0](https://github.com/twistapps/modula/commit/19165f06bfa133087061b50f02046493f2ccd4a7))
+* Template System ([#6](https://github.com/twistapps/modula/issues/6)) ([58c5d92](https://github.com/twistapps/modula/commit/58c5d9257162f912b9e5ac4c865f7e087b530278))
+
 ## [0.3.1](https://github.com/twistapps/modula/compare/0.3.0...0.3.1) (2022-03-17)
 
 
