@@ -92,7 +92,7 @@ namespace Modula.Editor
 
             foreach (var module in moduleManager.GetModules())
                 module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
-            
+
             // potential bugfix
             // if (ModulaSettings.DebugMode)
             // {
@@ -116,8 +116,8 @@ namespace Modula.Editor
             var data = moduleManager.gameObject.AddComponent(dataLayerType) as DataLayer;
             moduleManager.OnDataComponentCreated();
         }
-        
-        void OnInspectorUpdate()
+
+        private void OnInspectorUpdate()
         {
             Repaint();
         }

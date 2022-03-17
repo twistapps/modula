@@ -1,4 +1,5 @@
 using System;
+using Modula.Common;
 
 namespace Modula.Examples
 {

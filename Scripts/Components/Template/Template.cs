@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Modula.Common;
 using Unity.Collections;
-using UnityEngine;
 
 namespace Modula
 {
@@ -19,10 +16,7 @@ namespace Modula
                 foreach (var basepart in scriptable.baseparts)
                 {
                     var types = basepart.supports.ToTypesList<IModule>();
-                    foreach (var type in types)
-                    {
-                        modules.Add(type);
-                    }
+                    foreach (var type in types) modules.Add(type);
                 }
 
                 return modules;

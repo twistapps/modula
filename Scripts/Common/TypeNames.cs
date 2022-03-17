@@ -2,11 +2,12 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Common
+namespace Modula.Common
 {
     /// <summary>
-    /// This class associates Types with their names in string format. This could be useful if you need to get Type by its name (GetType(string name))
-    /// All types should be derived from the same interface/class
+    ///     This class associates Types with their names in string format. This could be useful if you need to get Type by its
+    ///     name (GetType(string name))
+    ///     All types should be derived from the same interface/class
     /// </summary>
     /// <typeparam name="TParentClass">the parent class/interface for all associated types</typeparam>
     public class TypeNames<TParentClass>

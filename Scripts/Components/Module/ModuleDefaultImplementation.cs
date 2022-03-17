@@ -37,7 +37,7 @@ namespace Modula
                     foreach (var attachedModule in _modules)
                         if (attachedModule.GetType() == type)
                             isMissing = false;
-                    
+
                     if (isMissing) AddModule(type);
                 }
         }

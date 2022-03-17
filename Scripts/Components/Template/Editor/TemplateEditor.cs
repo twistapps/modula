@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Common;
-using Modula.Common;
+﻿using Modula.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,18 +7,6 @@ namespace Modula.Editor
     [CustomEditor(typeof(Template), true)]
     public class TemplateEditor : UnityEditor.Editor
     {
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            
-            var template = (Template)target;
-            BasepartSelector(template);
-            
-            // GUILayout.Space(20);
-            // ModulaSettings.EditMode = EditorGUILayout.Toggle(new GUIContent("Edit Mode"),
-            //     ModulaSettings.EditMode);
-        }
-
         // private bool CheckBaseparts<T>(List<T> baseparts)
         // {
         //     if (baseparts == null || baseparts.Count == 0)
@@ -35,6 +19,18 @@ namespace Modula.Editor
 
         private TypeNames<IModule> _selections;
 
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            var template = (Template)target;
+            BasepartSelector(template);
+
+            // GUILayout.Space(20);
+            // ModulaSettings.EditMode = EditorGUILayout.Toggle(new GUIContent("Edit Mode"),
+            //     ModulaSettings.EditMode);
+        }
+
         private void BasepartSelector(Template template)
         {
             if (template.scriptable == null)
@@ -42,6 +38,7 @@ namespace Modula.Editor
                 GUILayout.Box("Select a template above ^^");
                 return;
             }
+
             GUILayout.Space(20);
             GUILayout.Label("Select Modules:", EditorStyles.boldLabel);
 
@@ -54,35 +51,39 @@ namespace Modula.Editor
             //
             //if template is selected and there is at least one not-null basepart:
             //
-            
-            int basepartsCount = template.scriptable.baseparts.Count;
-            
+
+            var basepartsCount = template.scriptable.baseparts.Count;
+
             //if it is first render or baseparts of this template changed
             if (template.selections == null || template.selections.Length != basepartsCount)
                 template.selections = new string[basepartsCount];
-            
-            if (_selections?.Names != template.selections) 
+
+            if (_selections?.Names != template.selections)
                 _selections = new TypeNames<IModule>(template.selections, false);
 
-            for (int i = 0; i < basepartsCount; i++)
+            for (var i = 0; i < basepartsCount; i++)
             {
                 if (basepartsCount != template.scriptable.baseparts.Count) break;
                 var basepart = template.scriptable.baseparts[i];
                 //var supportedByBasepart = new TypeNames<IModule>(basepart.supports.ToArray(), false);
-                
+
                 if (ModulaUtilities.IsNullOrEmpty(basepart.supports)) continue;
-                
+
                 int selectedIndex;
-                selectedIndex = ModulaUtilities.IsNullOrEmpty(_selections!.Types) ? 0 : basepart.supports.IndexOf(_selections.GetName(i));
+                selectedIndex = ModulaUtilities.IsNullOrEmpty(_selections!.Types)
+                    ? 0
+                    : basepart.supports.IndexOf(_selections.GetName(i));
                 if (selectedIndex == -1)
                 {
-                    selectedIndex = 0; 
+                    selectedIndex = 0;
                     _selections[0] = basepart.supports[0];
                 }
-                
+
                 EditorGUI.BeginChangeCheck();
-                _selections[i] = basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
-                if (EditorGUI.EndChangeCheck()) {
+                _selections[i] =
+                    basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
+                if (EditorGUI.EndChangeCheck())
+                {
                     template.selections[i] = _selections.GetName(i);
                     Debug.Log("Selected module: " + template.selections[i], target);
                 }

@@ -1,3 +1,5 @@
+using Modula.Common;
+
 namespace Modula.Examples
 {
     public class ThirdModule : Module

@@ -1,3 +1,4 @@
+using Modula.Common;
 using UnityEngine;
 
 namespace Modula.Examples

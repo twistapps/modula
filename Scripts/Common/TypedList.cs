@@ -3,13 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modula
+namespace Modula.Common
 {
     [Serializable]
     public class TypedList<T> : IEnumerable<Type>
     {
         [SerializeField] private bool _hasTypes;
         [SerializeField] public List<Type> Types { get; } = new List<Type>();
+
+        public IEnumerator<Type> GetEnumerator()
+        {
+            return Types.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         public bool Contains(Type behaviour)
         {
@@ -39,16 +49,6 @@ namespace Modula
 
             Debug.LogError("Type should be subclass of " + typeof(T).Name);
             return null;
-        }
-
-        public IEnumerator<Type> GetEnumerator()
-        {
-            return Types.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

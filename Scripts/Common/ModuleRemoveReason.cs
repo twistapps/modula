@@ -1,4 +1,4 @@
-﻿namespace Modula
+﻿namespace Modula.Common
 {
     public enum ModuleRemoveReason
     {

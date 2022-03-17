@@ -94,10 +94,9 @@ namespace Modula
         // }
 
         #endregion
-    }
+        
+        #region Initialization
 
-    public partial class DataLayer
-    {
         private readonly string _keyInitialized = "initialized";
 
         public bool initialized
@@ -110,10 +109,11 @@ namespace Modula
         {
             GetComponent<ModularBehaviour>().GetData();
         }
-    }
 
-    public partial class DataLayer
-    {
+        #endregion
+        
+        #region Components
+
         protected readonly Dictionary<string, Component> components = new Dictionary<string, Component>();
 
         public void SetComponent(string key, Component data, bool doOverride = false)
@@ -127,5 +127,7 @@ namespace Modula
             if (checkExistence && !KeyExists(key)) return null;
             return components[key];
         }
+
+        #endregion
     }
 }

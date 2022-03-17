@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modula
+namespace Modula.Common
 {
     [Serializable]
     public class TypeList
