@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Modula.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,10 +12,9 @@ namespace Modula
         //public PropertyModule properties;
         private List<IModule> _modules;
 
-        public abstract TypeList AvailableModules { get; }
+        public abstract TypedList<IModule> AvailableModules { get; }
         //public abstract Type[] GetAvailableModules();
-
-
+        
         public DataLayer GetData()
         {
             return GetComponent<DataLayer>();
@@ -30,11 +30,9 @@ namespace Modula
             return null;
         }
 
-        public virtual void OnDataComponentCreated()
-        {
-        }
+        public virtual void OnDataComponentCreated() { }
 
-        public void AddModule(IModule module)
+        public void OnModuleAdded(IModule module)
         {
             _modules.Add(module);
             module.OnAdd();
@@ -48,7 +46,7 @@ namespace Modula
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
             else
                 module = gameObject.AddComponent(moduleType) as IModule;
-            AddModule(module);
+            OnModuleAdded(module);
         }
 
         public List<IModule> GetModules()
@@ -121,12 +119,41 @@ namespace Modula
             }
         }
 
+        private bool CouldBeenModifiedFromEditorUI => ModulaSettings.DebugMode;
+
+        /// <summary>
+        /// Check if a module has dependencies that are not present in this GameObject.
+        /// Adds these 'unresolved' dependencies to the GameObject.
+        /// </summary>
+        /// <param name="module">The module to check dependencies of.</param>
+        /// <returns>true, if any module(s) have been added to this behaviour during the method run.</returns>
+        private bool ResolveDependencies(IModule module)
+        {
+            bool modulesModified = false;
+            foreach (var requirement in module.RequiredOtherModules)
+            {
+                if (_modules.Find(m => m.GetType() == requirement) == null)
+                {
+                    AddModule(requirement);
+                    modulesModified = true;
+                }
+            }
+
+            return modulesModified;
+        }
+
         private void UpdateModules()
         {
             _modules = gameObject.FindComponents<IModule>();
             //_modules = GetComponents<Module>().ToList();
             foreach (var module in _modules)
             {
+                if (CouldBeenModifiedFromEditorUI)
+                {
+                    // check if user did remove a module using Unity Editor GUI. If yes, return;
+                    // because ResolveDependencies implicitly calls UpdateModules() again if _modules has been modified.
+                    if (ResolveDependencies(module)) return;
+                }
                 if (AvailableModules.Contains(module.GetType())) continue;
                 if (CanRemove(module)) RemoveModule(module);
             }

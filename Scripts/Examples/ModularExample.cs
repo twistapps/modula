@@ -6,10 +6,10 @@ namespace Modula.Examples
     {
         private ExampleData _data;
 
-        public override TypeList AvailableModules { get; } = new TypeList()
-            .Add(typeof(ModuleFoo))
-            .Add(typeof(SecondModule))
-            .Add(typeof(ThirdModule));
+        public override TypedList<IModule> AvailableModules { get; } = new TypedList<IModule>()
+            .Add<ModuleFoo>()
+            .Add<SecondModule>()
+            .Add<ThirdModule>();
 
         public override Type GetDataLayerType()
         {
