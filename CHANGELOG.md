@@ -1,3 +1,16 @@
+# [0.3.0](https://github.com/twistapps/modula/compare/0.2.1...0.3.0) (2022-03-17)
+
+
+### Bug Fixes
+
+* replacing TypeList with TypedList ([6ad6b9a](https://github.com/twistapps/modula/commit/6ad6b9adca158e938c942593fbc671bce547feb7))
+
+
+### Features
+
+* resolve dependencies that are not present ([4a18026](https://github.com/twistapps/modula/commit/4a180261de4c14625fad52b817f5799047990f79))
+* TypedList: better typelist ([6158e1a](https://github.com/twistapps/modula/commit/6158e1a30eedae14ec0544fa30d4381b4f625860))
+
 ## [0.2.1](https://github.com/twistapps/modula/compare/0.2.0...0.2.1) (2022-03-11)
 
 
