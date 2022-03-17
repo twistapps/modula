@@ -40,6 +40,7 @@ namespace Modula.Common
 
         public TypedList<T> Add(Type type)
         {
+            if (type == null) return this;
             if (typeof(T).IsAssignableFrom(type) || type.IsSubclassOf(typeof(T)))
             {
                 Types.Add(type);

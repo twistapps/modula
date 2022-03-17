@@ -17,6 +17,9 @@ namespace Modula.Editor
 
             var template = (Template)target;
             DrawBasepartSelectors(template);
+            GUILayout.Space(20);
+            ModuleManager();
+            ShowDebugInfo();
 
             // GUILayout.Space(20);
             // ModulaSettings.EditMode = EditorGUILayout.Toggle(new GUIContent("Edit Mode"),
@@ -68,11 +71,11 @@ namespace Modula.Editor
             var basepartsCount = template.scriptable.baseparts.Count;
 
             //if it is first render or baseparts of this template changed
-            if (template.selections == null || template.selections.Length != basepartsCount)
-                template.selections = new string[basepartsCount];
+            if (template.Selections == null || template.Selections.Length != basepartsCount)
+                template.Selections = new string[basepartsCount];
 
-            if (_selections?.Names != template.selections)
-                _selections = new TypeNames<IModule>(template.selections, false);
+            if (_selections?.Names != template.Selections)
+                _selections = new TypeNames<IModule>(template.Selections, false);
 
             for (var i = 0; i < basepartsCount; i++)
             {
@@ -96,10 +99,67 @@ namespace Modula.Editor
                     basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
                 if (EditorGUI.EndChangeCheck())
                 {
-                    template.selections[i] = _selections.GetName(i);
-                    Debug.Log("Selected module: " + template.selections[i], target);
+                    template[i] = _selections.GetName(i);
+                    Debug.Log("Selected module: " + template.Selections[i], target);
                 }
             }
+        }
+        
+        private void ShowDebugInfo()
+        {
+            var moduleManager = (ModularBehaviour)target;
+            GUILayout.Space(20);
+            ModulaSettings.DebugMode = EditorGUILayout.Toggle(new GUIContent("Modular Entities Debug Mode"),
+                ModulaSettings.DebugMode);
+
+            //if (ModulaSettings.DebugMode) base.OnInspectorGUI();
+
+            foreach (var module in moduleManager.GetModules())
+                module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
+        }
+        
+        private void ModuleManager()
+        {
+            var moduleManager = (ModularBehaviour)target;
+
+            EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
+            var hasAttachedModules = false;
+            foreach (var module in moduleManager.GetModules())
+            {
+                hasAttachedModules = true;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(module.GetName());
+                var requiredOthers = module.RequiredOtherModules?.Types;
+                if (requiredOthers != null && requiredOthers.Count > 0)
+                {
+                    var requiredLabel = "Dependencies: ";
+                    foreach (var other in requiredOthers) requiredLabel += other.Name + "  ";
+                    var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
+                    GUILayout.Label(requiredLabel, textStyle);
+                }
+
+                GUI.enabled = false;
+                GUILayout.Button("Remove", GUILayout.Width(80));
+                GUI.enabled = true;
+
+                GUILayout.EndHorizontal();
+            }
+
+            if (!hasAttachedModules) GUILayout.Label("No attached modules.");
+            GUILayout.Space(20);
+            EditorGUILayout.HelpBox(new GUIContent("Other Available Modules:"));
+            var hasAvailableModules = false;
+
+            foreach (var moduleType in moduleManager.AvailableModules.Types)
+                if (moduleManager.GetModules().Count(m => m.GetType() == moduleType) < 1)
+                {
+                    hasAvailableModules = true;
+                    GUI.enabled = false;
+                    GUILayout.Button("Add " + moduleType.Name);
+                    GUI.enabled = true;
+                }
+
+            if (!hasAvailableModules) GUILayout.Label("This behaviour has no more available modules.");
         }
     }
 }

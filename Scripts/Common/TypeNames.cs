@@ -17,10 +17,12 @@ namespace Modula.Common
 
         public TypeNames(string[] typeNames, bool silentExceptions = true)
         {
-            Names = typeNames;
+            Names = new string[typeNames.Length];
+            Array.Copy(typeNames, Names, Names.Length);
             Types = Names.ToTypesArray<TParentClass>();
         }
 
+        //todo: copy types or use struct
         public TypeNames(Type[] types, bool silentExceptions = true)
         {
             if (types == null)

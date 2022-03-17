@@ -4,7 +4,7 @@ namespace Modula.Examples
 {
     public class ThirdPersonCamera : Module
     {
-        public override TypeList replaces { get; } = new TypeList()
-            .Add(typeof(FirstPersonCamera));
+        public override TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>()
+            .Add<ModuleFoo>();
     }
 }

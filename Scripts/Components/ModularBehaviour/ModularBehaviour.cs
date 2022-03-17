@@ -10,9 +10,7 @@ namespace Modula
     public abstract class ModularBehaviour : MonoBehaviour
     {
         private List<IModule> _modules;
-
         public abstract TypedList<IModule> AvailableModules { get; }
-
         private bool couldBeModifiedFromEditorUI => ModulaSettings.DebugMode;
 
         public DataLayer GetData()
@@ -31,6 +29,8 @@ namespace Modula
 
         private void OnModuleAdded(IModule module)
         {
+            if (module == null) return;
+            //Debug.Log("Added module: " + module.GetType().Name);
             _modules.Add(module);
             module.OnAdd();
             UpdateModules();
@@ -38,6 +38,7 @@ namespace Modula
 
         public void AddModule(Type moduleType)
         {
+            if (_modules.Any(m => m.GetType() == moduleType)) return;
             IModule module;
             if (Application.isEditor && !Application.isPlaying)
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
@@ -57,6 +58,16 @@ namespace Modula
             return (T)_modules.First(m => m.GetType() == typeof(T));
         }
 
+        public IModule GetModule(string typeName)
+        {
+            return _modules.Find(m => m.GetName() == typeName);
+        }
+
+        public IModule GetModule(Type moduleType)
+        {
+            return _modules.Find(m => m.GetType() == moduleType);
+        }
+
         private string GetReasonString(ModuleRemoveReason reason)
         {
             switch (reason)
@@ -70,20 +81,18 @@ namespace Modula
                     return "Reason is not specified.";
             }
         }
-
+        
         //todo: recursively check dependencies of dependencies
         public bool CanRemove(IModule module)
         {
-            // return _modules.All(m =>
-            // {
-            //     var required = m.RequiredOtherModules;
-            //     return required == null || !required.Contains(module.GetType());
-            // });
-
-            return FindDependent(module).Length > 0;
+            return _modules.All(m =>
+            {
+                var required = m.RequiredOtherModules;
+                return required == null || !required.Contains(module.GetType());
+            });
         }
 
-        public IModule[] FindDependent(IModule module)
+        private IModule[] FindDependent(IModule module)
         {
             var dependent = _modules.Where(m =>
             {
@@ -92,6 +101,33 @@ namespace Modula
             });
             
             return dependent.ToArray();
+        }
+
+        private IModule[] FindDependencies(IModule module)
+        {
+            return _modules.Where(m =>
+                module.RequiredOtherModules.Contains(m.GetType())).ToArray();
+        }
+
+        private HashSet<IModule> FindDependenciesRecursive(IModule module, HashSet<IModule> dependencies = null)
+        {
+            dependencies ??= new HashSet<IModule> { module };
+            dependencies.Add(module);
+            
+            var found = FindDependencies(module).Where(d => !dependencies.Contains(d)).ToArray();
+            
+            if (found.Length == 0)
+            {
+                dependencies.Add(module);
+                return dependencies;
+            }
+            
+            foreach (var m in found)
+            {
+                dependencies.UnionWith(FindDependenciesRecursive(m, dependencies));
+            }
+            
+            return dependencies;
         }
 
         public string[] FindDependentModuleNames(IModule module)
@@ -117,6 +153,34 @@ namespace Modula
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="forceDelete">Remove dependencies even if other modules depend on them</param>
+        /// <param name="reason"></param>
+        /// <param name="ignore"></param>
+        public void RemoveModuleWithDependencies(IModule module, bool forceDelete=false,
+            ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
+        {
+            var dependencies = FindDependenciesRecursive(module);//.Reverse().ToArray();
+            foreach (var dependency in dependencies)
+            {
+                bool whitelist = false;
+                if (!forceDelete)
+                {
+                    foreach (var other in _modules.Where(m => !dependencies.Contains(m)) )
+                    {
+                        if (FindDependencies(other).Contains(dependency))
+                        {
+                            whitelist = true;
+                        }
+                    }
+                }
+                if (!whitelist) RemoveModule(dependency);
+            }
+        }
+
+        /// <summary>
         ///     Check if a module has dependencies that are not present in this GameObject.
         ///     Adds these 'unresolved' dependencies to the GameObject.
         /// </summary>
@@ -135,19 +199,23 @@ namespace Modula
             return modulesModified;
         }
 
-        private void UpdateModules()
+        private void UpdateModules(bool shouldResolveDependencies=true)
         {
             _modules = gameObject.FindComponents<IModule>();
             //_modules = GetComponents<Module>().ToList();
             foreach (var module in _modules)
             {
-                if (couldBeModifiedFromEditorUI)
+                if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
                     // check if user did remove a module using Unity Editor GUI. If yes, return;
                     // because ResolveDependencies implicitly calls UpdateModules() again if _modules has been modified.
                     if (ResolveDependencies(module))
                         return;
                 if (AvailableModules.Contains(module.GetType())) continue;
-                if (CanRemove(module)) RemoveModule(module);
+                else if (CanRemove(module))
+                {
+                    RemoveModule(module);
+                    return;
+                }
             }
         }
     }

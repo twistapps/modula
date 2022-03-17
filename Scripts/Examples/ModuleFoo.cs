@@ -1,3 +1,5 @@
+using Modula.Common;
+
 namespace Modula.Examples
 {
     public class ModuleFoo : Module
@@ -7,6 +9,9 @@ namespace Modula.Examples
         //         typeof(SecondModule),
         //         typeof(ThirdModule)
         //         );
+
+        public override TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>()
+            .Add<ThirdModule>();
 
         public void Awake()
         {
