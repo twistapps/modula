@@ -40,12 +40,12 @@ namespace Modula
             return DefaultImplementation.GetData();
         }
 
-        // public virtual void ManagedUpdate()
-        // {
-        // }
-        public virtual void ModuleUpdate()
+        public virtual void ManagedUpdate()
         {
+            ModuleUpdate();
         }
+        
+        public virtual void ModuleUpdate() { }
 
         public virtual void Update()
         {
