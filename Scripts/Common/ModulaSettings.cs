@@ -6,8 +6,9 @@ namespace Modula.Common
     public static class ModulaSettings
     {
         public const string Component = "Module.";
+        public const string EMPTY_CHOICE = "<Empty>";
+        
         private static bool _debugMode;
-
         public static bool DebugMode
         {
             get => _debugMode;
@@ -15,6 +16,17 @@ namespace Modula.Common
             {
                 _debugMode = value;
                 CallDebugModeUpdate(value);
+            }
+        }
+        
+        private static bool _editMode;
+        public static bool EditMode
+        {
+            get => _editMode;
+            set
+            {
+                _editMode = value;
+                //CallEditModeUpdate(value);
             }
         }
 
