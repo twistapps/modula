@@ -69,7 +69,7 @@ namespace Modula
                 {
                     var toRemove = GetModule(moduleName);
                     if (toRemove == null) continue;
-                    RemoveModuleWithDependencies(toRemove);
+                    DependencyWorker.RemoveModuleWithDependencies(toRemove);
                 } 
             }
             

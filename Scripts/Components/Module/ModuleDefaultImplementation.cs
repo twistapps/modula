@@ -9,7 +9,7 @@ namespace Modula
     public partial class ModuleDefaultImplementation
     {
         private readonly IModule _boundModule;
-        private List<IModule> _modules;
+        private List<IModule> attachments;
 
         private TimingConstraints _updateConstraints;
 
@@ -28,13 +28,13 @@ namespace Modula
         public void OnAdd()
         {
             Main = _boundModule.GetComponent<ModularBehaviour>();
-            _modules = FindComponents<IModule>().ToList();
+            attachments = FindComponents<IModule>().ToList();
             var hasRequiredOtherModules = _boundModule.RequiredOtherModules?.Types != null;
             if (hasRequiredOtherModules)
                 foreach (var type in _boundModule.RequiredOtherModules.Types)
                 {
                     var isMissing = true;
-                    foreach (var attachedModule in _modules)
+                    foreach (var attachedModule in attachments)
                         if (attachedModule.GetType() == type)
                             isMissing = false;
 
@@ -44,8 +44,6 @@ namespace Modula
 
         public void AddModule(Type moduleType)
         {
-            //var module = _bind.gameObject.AddComponent(moduleType) as IModule;
-            //modules.Add(module);
             Main.AddModule(moduleType);
         }
 
@@ -62,6 +60,11 @@ namespace Modula
         public void Update()
         {
             UpdateConstraints.Update(Time.deltaTime);
+        }
+        
+        private T[] FindComponents<T>()
+        {
+            return _boundModule.gameObject.FindComponents<T>().ToArray();
         }
     }
 }

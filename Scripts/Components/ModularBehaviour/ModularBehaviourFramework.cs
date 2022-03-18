@@ -14,6 +14,11 @@ namespace Modula
         public static List<T> FindComponents<T>(this GameObject obj)
         {
             var allInstances = Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
+            
+            // return (from component in allInstances 
+            //     let mono = component as MonoBehaviour 
+            //     where mono.gameObject == obj select component).ToList();
+            
             var found = new List<T>();
             foreach (var component in allInstances)
             {
@@ -21,16 +26,7 @@ namespace Modula
                 if (mono.gameObject != obj) continue;
                 found.Add(component);
             }
-
             return found;
-        }
-    }
-
-    public partial class ModuleDefaultImplementation
-    {
-        private T[] FindComponents<T>()
-        {
-            return _boundModule.gameObject.FindComponents<T>().ToArray();
         }
     }
 }

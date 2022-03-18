@@ -28,11 +28,11 @@ namespace Modula.Editor
 
         private void ModuleManager()
         {
-            var moduleManager = (ModularBehaviour)target;
+            var mb = (ModularBehaviour)target;
 
             EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
             var hasAttachedModules = false;
-            foreach (var module in moduleManager.GetModules())
+            foreach (var module in mb.GetModules())
             {
                 hasAttachedModules = true;
                 GUILayout.BeginHorizontal();
@@ -48,15 +48,15 @@ namespace Modula.Editor
 
                 if (GUILayout.Button("Remove", GUILayout.Width(80)))
                 {
-                    if (moduleManager.CanRemove(module))
+                    if (mb.CanRemove(module))
                     {
-                        moduleManager.RemoveModule(module, ModuleRemoveReason.RemovedFromGUI);
+                        mb.RemoveModule(module, ModuleRemoveReason.RemovedFromGUI);
                     }
                     else
                     {
                         var errorText = "Can't remove module '" + module.GetType().Name +
                                         "' because it is required by these other modules: " +
-                                        string.Join(", ", moduleManager.FindDependentModuleNames(module));
+                                        string.Join(", ", DependencyWorker.FindDependentModuleNames(module));
                         Debug.LogError(errorText, target);
                     }
 
@@ -71,11 +71,11 @@ namespace Modula.Editor
             EditorGUILayout.HelpBox(new GUIContent("Other Available Modules:"));
             var hasAvailableModules = false;
 
-            foreach (var moduleType in moduleManager.AvailableModules.Types)
-                if (moduleManager.GetModules().Count(m => m.GetType() == moduleType) < 1)
+            foreach (var moduleType in mb.AvailableModules.Types)
+                if (mb.GetModules().Count(m => m.GetType() == moduleType) < 1)
                 {
                     hasAvailableModules = true;
-                    if (GUILayout.Button("Add " + moduleType.Name)) moduleManager.AddModule(moduleType);
+                    if (GUILayout.Button("Add " + moduleType.Name)) mb.AddModule(moduleType);
                 }
 
             if (!hasAvailableModules) GUILayout.Label("This behaviour has no more available modules.");
