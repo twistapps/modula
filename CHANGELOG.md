@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/twistapps/modula/compare/0.5.0...0.5.1) (2022-04-19)
+
+
+### Bug Fixes
+
+* systematization of code structure ([591bd48](https://github.com/twistapps/modula/commit/591bd48b88ce984de6ba236d4c47d31475029e96))
+
 # [0.5.0](https://github.com/twistapps/modula/compare/0.4.0...0.5.0) (2022-03-17)
 
 
