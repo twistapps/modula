@@ -22,25 +22,12 @@ namespace Modula
                 _selections = value;
             }
         }
-        
-        public string this[int index]
+
+        public void SetSelection(int index, string value)
         {
-            get => _selections[index];
-            set
-            {
-                var oldValue = new string[_selections.Length];
-                for (int i = 0; i < _selections.Length; i++)
-                {
-                    if (_selections[i] == null)
-                    {
-                        oldValue[i] = null;
-                        continue;
-                    } 
-                    oldValue[i] = string.Copy(_selections[i]);
-                }
-                _selections[index] = value;
-                HandleSelectionsChange(oldValue, _selections);
-            }
+            var oldValue = _selections.Copy();
+            _selections[index] = value;
+            HandleSelectionsChange(oldValue, _selections);
         }
 
         public override TypedList<IModule> AvailableModules
@@ -64,24 +51,23 @@ namespace Modula
         {
             if (oldValue != null)
             {
-                var removed = oldValue.Except(newValue).Where(m => m != ModulaSettings.EMPTY_CHOICE);
-                foreach (var moduleName in removed)
-                {
-                    var toRemove = GetModule(moduleName);
-                    if (toRemove == null) continue;
-                    DependencyWorker.RemoveModuleWithDependencies(toRemove);
-                } 
+                var toRemove = oldValue.Except(newValue).Where(m => m != ModulaSettings.EMPTY_CHOICE).ToArray()
+                    .ToTypesArray<IModule>() as IModule[];
+                
+                DependencyWorker.RemoveWithDependencies(toRemove, this);
             }
             
             var added = oldValue != null ? newValue.Except(oldValue) : newValue;
-            added = added.Where(m => m != ModulaSettings.EMPTY_CHOICE);
+            added = added.Where(m => m != ModulaSettings.EMPTY_CHOICE).ToArray();
 
-            foreach (var moduleName in added)
-            {
-                var toAdd = AvailableModules.FirstOrDefault(m => m.Name == moduleName);
-                if (toAdd == null) continue;
-                AddModule(toAdd);
-            }
+            AddModules(added.ToDerivedFrom<IModule>());
+
+            // foreach (var moduleName in added)
+            // {
+            //     var toAdd = AvailableModules.FirstOrDefault(m => m.Name == moduleName);
+            //     if (toAdd == null) continue;
+            //     AddModule(toAdd);
+            // }
             
         }
     }

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Basepart
   m_EditorClassIdentifier: 
   name: Basepart
+  supports: []
   optional: 1

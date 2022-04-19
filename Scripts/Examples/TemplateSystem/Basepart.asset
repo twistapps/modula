@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Basepart
   supports:
   - <Empty>
+  - ModuleFoo
   - SecondModule
   - AiInput
   optional: 1

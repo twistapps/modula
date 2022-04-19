@@ -35,12 +35,37 @@ namespace Modula.Common
 
             return foundArr;
         }
+        
+        public static Type GetTypeByName<TParentClass>(string name)
+        {
+            if (name == null) return null;
+            var derivatives = GetDerivedFrom<TParentClass>();
+            return derivatives.FirstOrDefault(t => t.Name == name);
+        }
+
+        public static string[] Copy(this string[] source)
+        {
+            string[] copy = new string[source.Length];
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (source[i] == null)
+                {
+                    copy[i] = null;
+                    continue;
+                } 
+                copy[i] = string.Copy(source[i]);
+            }
+
+            return copy;
+        }
 
         public static Type[] ToTypesArray<TParentClass>(this string[] typeNames)
         {
-            var types = new Type[typeNames.Length];
-            for (var i = 0; i < types.Length; i++) types[i] = GetTypeByName<TParentClass>(typeNames[i]);
-            return types;
+            return GetDerivedFrom<IModule>().Where(m => typeNames.Contains(m.Name)).ToArray();
+            
+            // var types = new Type[typeNames.Length];
+            // for (var i = 0; i < types.Length; i++) types[i] = GetTypeByName<TParentClass>(typeNames[i]);
+            // return types;
         }
 
         public static List<Type> ToTypesList<TParentClass>(this List<string> typeNames)
@@ -48,11 +73,9 @@ namespace Modula.Common
             return ToTypesArray<TParentClass>(typeNames.ToArray()).ToList();
         }
 
-        public static Type GetTypeByName<TParentClass>(string name)
+        public static Type[] ToDerivedFrom<TParentClass>(this IEnumerable<string> typeNames)
         {
-            if (name == null) return null;
-            var derivatives = GetDerivedFrom<TParentClass>();
-            return derivatives.FirstOrDefault(t => t.Name == name);
+            return GetDerivedFrom<TParentClass>().Where(t => typeNames.Contains(t.Name)).ToArray();
         }
 
         public static bool IsNullOrEmpty<T>(List<T> list)

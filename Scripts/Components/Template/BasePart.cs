@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Modula
 {
     [CreateAssetMenu(fileName = "Basepart", menuName = "Modula/Templates/BasePart", order = 2)]
+    [Serializable]
     public class BasePart : ScriptableObject
     {
         public new string name = "Basepart";

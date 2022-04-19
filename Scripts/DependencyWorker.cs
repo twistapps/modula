@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Modula.Common;
 using UnityEditor;
@@ -83,6 +84,16 @@ namespace Modula
             }
         }
 
+        public static void RemoveWithDependencies(IModule module, ModularBehaviour main)
+        {
+            
+        }
+
+        public static void RemoveWithDependencies(IModule[] modules, ModularBehaviour main)
+        {
+            
+        }
+
         /// <summary>
         ///     Check if a module has dependencies that are not present in this GameObject.
         ///     Adds these 'unresolved' dependencies to the GameObject.
@@ -101,6 +112,21 @@ namespace Modula
                 }
 
             return modulesModified;
+        }
+
+        public static bool ResolveDependencies(IEnumerable<IModule> modules, ModularBehaviour main)
+        {
+            var attachments = main.attachments.Select(module => module.GetType());
+            var missing = new List<Type>();
+            foreach (var module in modules)
+            {
+                missing.AddRange(module.RequiredOtherModules.Where(
+                    requirement => !attachments.Contains(requirement))
+                );
+            }
+            
+            main.AddModules(missing.ToArray());
+            return missing.Count > 0;
         }
     }
 }

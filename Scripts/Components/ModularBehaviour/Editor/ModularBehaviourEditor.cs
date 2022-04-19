@@ -32,7 +32,7 @@ namespace Modula.Editor
 
             EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
             var hasAttachedModules = false;
-            foreach (var module in mb.GetModules())
+            foreach (var module in mb.GetAttachments())
             {
                 hasAttachedModules = true;
                 GUILayout.BeginHorizontal();
@@ -72,7 +72,7 @@ namespace Modula.Editor
             var hasAvailableModules = false;
 
             foreach (var moduleType in mb.AvailableModules.Types)
-                if (mb.GetModules().Count(m => m.GetType() == moduleType) < 1)
+                if (mb.GetAttachments().Count(m => m.GetType() == moduleType) < 1)
                 {
                     hasAvailableModules = true;
                     if (GUILayout.Button("Add " + moduleType.Name)) mb.AddModule(moduleType);
@@ -90,7 +90,7 @@ namespace Modula.Editor
 
             if (ModulaSettings.DebugMode) base.OnInspectorGUI();
 
-            foreach (var module in moduleManager.GetModules())
+            foreach (var module in moduleManager.GetAttachments())
                 module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
 
             // potential bugfix

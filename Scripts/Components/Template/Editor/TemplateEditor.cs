@@ -99,7 +99,8 @@ namespace Modula.Editor
                     basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
                 if (EditorGUI.EndChangeCheck())
                 {
-                    template[i] = _selections.GetName(i);
+                    //template[i] = _selections.GetName(i);
+                    template.SetSelection(i, _selections.GetName(i));
                     Debug.Log("Selected module: " + template.Selections[i], target);
                 }
             }
@@ -114,7 +115,7 @@ namespace Modula.Editor
 
             //if (ModulaSettings.DebugMode) base.OnInspectorGUI();
 
-            foreach (var module in moduleManager.GetModules())
+            foreach (var module in moduleManager.GetAttachments())
                 module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
         }
         
@@ -124,7 +125,7 @@ namespace Modula.Editor
 
             EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
             var hasAttachedModules = false;
-            foreach (var module in moduleManager.GetModules())
+            foreach (var module in moduleManager.GetAttachments())
             {
                 hasAttachedModules = true;
                 GUILayout.BeginHorizontal();
@@ -151,7 +152,7 @@ namespace Modula.Editor
             var hasAvailableModules = false;
 
             foreach (var moduleType in moduleManager.AvailableModules.Types)
-                if (moduleManager.GetModules().Count(m => m.GetType() == moduleType) < 1)
+                if (moduleManager.GetAttachments().Count(m => m.GetType() == moduleType) < 1)
                 {
                     hasAvailableModules = true;
                     GUI.enabled = false;

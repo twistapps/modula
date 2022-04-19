@@ -4,13 +4,14 @@ using System.Linq;
 using Modula.Common;
 using UnityEditor;
 using UnityEngine;
+using Logger = Modula.Common.Logger;
 
 namespace Modula
 {
     public abstract class ModularBehaviour : MonoBehaviour
     {
         private List<IModule> _modules;
-        private bool couldBeModifiedFromEditorUI => ModulaSettings.DebugMode;
+        private static bool couldBeModifiedFromEditorUI => ModulaSettings.DebugMode;
         public abstract TypedList<IModule> AvailableModules { get; }
 
         public List<IModule> attachments => _modules;
@@ -38,42 +39,48 @@ namespace Modula
         private void OnModuleAdded(IModule module)
         {
             if (module == null) return;
-            //Debug.Log("Added module: " + module.GetType().Name);
             _modules.Add(module);
             module.OnAdd();
             UpdateModules();
         }
 
-        public void AddModule(Type moduleType)
+        private IModule CreateModuleComponent(Type moduleType)
         {
-            if (_modules.Any(m => m.GetType() == moduleType)) return;
             IModule module;
             if (Application.isEditor && !Application.isPlaying)
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
             else
                 module = gameObject.AddComponent(moduleType) as IModule;
+            
+            return module;
+        }
+
+        public void AddModule(Type type)
+        {
+            if (_modules.Any(m => m.GetType() == type)) return;
+            var module = CreateModuleComponent(type);
             OnModuleAdded(module);
+        }
+
+        public void AddModule<T>() where T : IModule
+        {
+            AddModule(typeof(T));
+        }
+
+        public void AddModules(Type[] types)
+        {
+            types = types.Where(m => _modules.All(a => a.GetType() != m)).ToArray();
+            foreach (var type in types)
+            {
+                CreateModuleComponent(type);
+            }
         }
 
         #endregion
 
         #region Getting
-        
-        private string GetReasonString(ModuleRemoveReason reason)
-        {
-            switch (reason)
-            {
-                case ModuleRemoveReason.NotSupportedByThisBehaviour:
-                    return "Module is not supported by ModularNetBehaviour of this type";
-                case ModuleRemoveReason.RemovedFromGUI:
-                    return "Module is removed using Editor GUI";
-                case ModuleRemoveReason.NotSpecified:
-                default:
-                    return "Reason is not specified.";
-            }
-        }
-        
-        public List<IModule> GetModules()
+
+        public List<IModule> GetAttachments()
         {
             UpdateModules();
             return _modules;
@@ -81,7 +88,7 @@ namespace Modula
 
         public T GetModule<T>() where T : IModule
         {
-            return (T)_modules.First(m => m.GetType() == typeof(T));
+            return (T)_modules.FirstOrDefault(m => m.GetType() == typeof(T));
         }
 
         public IModule GetModule(string typeName)
@@ -99,6 +106,7 @@ namespace Modula
         #region Removing
 
         //todo: recursively check dependencies of dependencies
+        // IsRequiredByOtherAttachments
         public bool CanRemove(IModule module)
         {
             return _modules.All(m =>
@@ -107,19 +115,32 @@ namespace Modula
                 return required == null || !required.Contains(module.GetType());
             });
         }
-        public void RemoveModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
+
+        private void DestroyModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
         {
-            _modules.Remove(module);
             if (Application.isEditor && !Application.isPlaying)
             {
-                Debug.Log(string.Concat("Removing module: ", module.GetType().Name,
-                    ", reason: ", GetReasonString(reason), " (class ", GetType().Name, ")"), gameObject);
+                Logger.LogRemovingModule(module, reason, gameObject);
                 Undo.DestroyObjectImmediate(module as MonoBehaviour);
-                //DestroyImmediate(module as MonoBehaviour);
             }
             else
             {
                 Destroy(module as MonoBehaviour);
+            }
+        }
+        
+        public void RemoveModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
+        {
+            _modules.Remove(module);
+            DestroyModule(module, reason);
+        }
+
+        public void RemoveModules(IModule[] toRemove, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
+        {
+            _modules = _modules.Except(toRemove).ToList();
+            foreach (var module in toRemove)
+            {
+                DestroyModule(module, reason);
             }
         }
 
@@ -129,20 +150,12 @@ namespace Modula
         {
             _modules = gameObject.FindComponents<IModule>();
             
-            foreach (var module in _modules)
-            {
-                if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
-                    // check if user did remove a module using Unity Editor GUI. If yes, return;
-                    // because ResolveDependencies implicitly calls UpdateModules() again if _modules has been modified.
-                    if (DependencyWorker.ResolveDependencies(module))
-                        return;
-                if (AvailableModules.Contains(module.GetType())) continue;
-                else if (CanRemove(module))
-                {
-                    RemoveModule(module);
+            if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
+                if (DependencyWorker.ResolveDependencies(_modules, this))
                     return;
-                }
-            }
+
+            var toRemove = _modules.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m));
+            RemoveModules(toRemove.ToArray());
         }
     }
 }

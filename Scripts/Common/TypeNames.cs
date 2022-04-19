@@ -42,41 +42,16 @@ namespace Modula.Common
             Names = types.Select(t => t?.Name).ToArray();
         }
 
-        // public string[] names { 
-        //     get
-        //     {
-        //         if (IsNull()) return null;
-        //         string[] copy = new string[_names.Length];
-        //         Array.Copy(_names, copy, copy.Length);
-        //         return copy;
-        //     }
-        //     
-        // }
-        //
-        // public Type[] types
-        // {
-        //     get
-        //     {
-        //         if (IsNull()) return null;
-        //         Type[] copy = new Type[_names.Length];
-        //         Array.Copy(_types, copy, copy.Length);
-        //         return copy;
-        //     }
-        // }
-
         public string[] Names { get; }
 
         public Type[] Types { get; }
-
-        // public Type this[int index]
-        // {
-        //     get => Types[index];
-        // }
 
         public string this[int index]
         {
             set
             {
+                // if (string.IsNullOrEmpty(value)) return;
+                // if (index < 0 || index >= Types.Length) return;
                 Types[index] = ModulaUtilities.GetTypeByName<TParentClass>(value);
                 Names[index] = value;
             }
