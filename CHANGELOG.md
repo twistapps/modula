@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/twistapps/modula/compare/0.4.0...0.5.0) (2022-03-17)
+
+
+### Features
+
+* actual module management via template system ([536a348](https://github.com/twistapps/modula/commit/536a348baeef6f352c10d5556d6b49a616f08d35))
+
 # [0.4.0](https://github.com/twistapps/modula/compare/0.3.1...0.4.0) (2022-03-17)
 
 
