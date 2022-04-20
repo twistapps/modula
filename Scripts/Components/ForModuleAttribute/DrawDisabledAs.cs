@@ -1,6 +1,6 @@
 namespace Modula
 {
-    public enum DisabledDrawType
+    public enum DrawDisabledAs
     {
         ReadOnly = 1,
         Hide

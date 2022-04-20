@@ -18,7 +18,7 @@ namespace Modula.Editor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (!ShowMe(property) && forModule.disabledType == DisabledDrawType.Hide)
+            if (!ShowMe(property) && forModule.DrawDisabledType == DrawDisabledAs.Hide)
                 return -EditorGUIUtility.standardVerticalSpacing;
 
             if (property.propertyType != SerializedPropertyType.Generic)
@@ -86,7 +86,7 @@ namespace Modula.Editor
                     EditorGUI.PropertyField(position, property, label);
                 }
             }
-            else if (forModule.disabledType == DisabledDrawType.ReadOnly)
+            else if (forModule.DrawDisabledType == DrawDisabledAs.ReadOnly)
             {
                 GUI.enabled = false;
                 EditorGUI.PropertyField(position, property, label);

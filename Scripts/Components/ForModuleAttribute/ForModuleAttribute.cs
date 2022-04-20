@@ -9,15 +9,15 @@ namespace Modula
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class ForModuleAttribute : PropertyAttribute
     {
-        public ForModuleAttribute(Type targetComponent, DisabledDrawType disabledDrawType = DisabledDrawType.ReadOnly)
+        public ForModuleAttribute(Type targetComponent, DrawDisabledAs drawDisabledAs = DrawDisabledAs.ReadOnly)
         {
             this.targetComponent = targetComponent;
-            disabledType = disabledDrawType;
+            DrawDisabledType = drawDisabledAs;
         }
 
         #region Fields
 
-        public DisabledDrawType disabledType { get; }
+        public DrawDisabledAs DrawDisabledType { get; }
         public readonly Type targetComponent;
 
         #endregion
