@@ -13,7 +13,8 @@ namespace Modula.Editor
         private Type[] _registeredModules;
         private List<bool> _selectedModules;
         private bool _showSelectionMenu = true;
-
+        private bool _isOptional;
+        
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -22,6 +23,12 @@ namespace Modula.Editor
             Init(basepart);
             ModuleManager(basepart);
             LogSupports(basepart);
+            
+            if (_isOptional != basepart.optional)
+            {
+                OnModuleSelectionChange(basepart);
+                _isOptional = basepart.optional;
+            }
         }
 
         private void Init(BasePart basepart)
@@ -42,6 +49,7 @@ namespace Modula.Editor
         {
             return _registeredModules.FirstOrDefault(t => t.Name == name);
         }
+        
         private void ModuleManager(BasePart basepart)
         {
             _showSelectionMenu = EditorGUILayout.Foldout(_showSelectionMenu, "Supported Modules");
