@@ -1,3 +1,19 @@
+# [0.6.0](https://github.com/twistapps/modula/compare/0.5.1...0.6.0) (2022-04-20)
+
+
+### Bug Fixes
+
+* changing basepart now updates template GUI ([29e10ff](https://github.com/twistapps/modula/commit/29e10ff32f756df4434454ae60f53cd4a52a8606))
+* extracted commonly used editor utils ([5ad6138](https://github.com/twistapps/modula/commit/5ad61387ca3fba0c451d05d4da372683fbb426cb))
+* templates rework, improved stability ([997f9c3](https://github.com/twistapps/modula/commit/997f9c301ca6490d6eb2fc0af4e0d15ec44683e6))
+* TypeNames occasionally throwing NullReferenceException ([dc904d4](https://github.com/twistapps/modula/commit/dc904d41977c6285de6b21df59912620103dab72))
+
+
+### Features
+
+* bind custom DataLayer type to MB by naming ([1964cbe](https://github.com/twistapps/modula/commit/1964cbec905c6acc382ec79b68a0e3ad93c4fa70))
+* silence the logging, new log message ([2f10ab4](https://github.com/twistapps/modula/commit/2f10ab42fefed335b0ea257a31744417ab21565d))
+
 ## [0.5.1](https://github.com/twistapps/modula/compare/0.5.0...0.5.1) (2022-04-19)
 
 
