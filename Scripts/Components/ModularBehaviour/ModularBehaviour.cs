@@ -166,7 +166,12 @@ namespace Modula
                 if (DependencyWorker.ResolveDependencies(_modules, this))
                     return;
 
-            var toRemove = _modules.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m));
+            var toRemove = _modules.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m)).ToList();
+            foreach (var module in _modules)
+            {
+                var duplicate = _modules.FirstOrDefault(m => m.GetType() == module.GetType() && m != module);
+                if (duplicate != null) toRemove.Add(duplicate);
+            }
             RemoveModules(toRemove.ToArray());
         }
 
