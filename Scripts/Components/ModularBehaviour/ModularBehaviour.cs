@@ -25,7 +25,9 @@ namespace Modula
         
         public virtual Type GetDataLayerType()
         {
-            return null;
+            return ModulaUtilities.GetDerivedFrom<DataLayer>()
+                .SingleOrDefault(type => type.Name == this.GetType().Name + ModulaSettings.DATA_SUFFIX);
+            //return null;
         }
 
         public virtual void OnDataComponentCreated()
@@ -41,6 +43,16 @@ namespace Modula
             if (module == null) return;
             _modules.Add(module);
             module.OnAdd();
+            UpdateModules();
+        }
+
+        private void OnModulesAdded(IEnumerable<IModule> modules)
+        {
+            foreach (var module in modules)
+            {
+                _modules.Add(module);
+                module.OnAdd();
+            }
             UpdateModules();
         }
 
@@ -157,5 +169,14 @@ namespace Modula
             var toRemove = _modules.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m));
             RemoveModules(toRemove.ToArray());
         }
+
+        #region Lifecycle
+
+        private void Awake()
+        {
+            UpdateModules();
+        }
+
+        #endregion
     }
 }

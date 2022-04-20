@@ -9,13 +9,14 @@ namespace Modula
     public partial class ModuleDefaultImplementation
     {
         private readonly IModule _boundModule;
-        private List<IModule> attachments;
+        //private List<IModule> attachments;
 
         private TimingConstraints _updateConstraints;
 
         public ModuleDefaultImplementation(IModule bind)
         {
             _boundModule = bind;
+            Main = _boundModule.GetComponent<ModularBehaviour>();
         }
 
         public ModularBehaviour Main { get; private set; }
@@ -28,18 +29,18 @@ namespace Modula
         public void OnAdd()
         {
             Main = _boundModule.GetComponent<ModularBehaviour>();
-            attachments = FindComponents<IModule>().ToList();
+            var attachments = FindComponents<IModule>().ToList();
             var hasRequiredOtherModules = _boundModule.RequiredOtherModules?.Types != null;
-            if (hasRequiredOtherModules)
-                foreach (var type in _boundModule.RequiredOtherModules.Types)
-                {
-                    var isMissing = true;
-                    foreach (var attachedModule in attachments)
-                        if (attachedModule.GetType() == type)
-                            isMissing = false;
+            if (!hasRequiredOtherModules) return;
+            foreach (var type in _boundModule.RequiredOtherModules.Types)
+            {
+                var isMissing = true;
+                foreach (var attachedModule in attachments)
+                    if (attachedModule.GetType() == type)
+                        isMissing = false;
 
-                    if (isMissing) AddModule(type);
-                }
+                if (isMissing) AddModule(type);
+            }
         }
 
         public void AddModule(Type moduleType)

@@ -7,6 +7,7 @@ namespace Modula.Common
     {
         public const string Component = "Module.";
         public const string EMPTY_CHOICE = "<Empty>";
+        public const string DATA_SUFFIX = "Data";
 
         private static bool _debugMode;
 
