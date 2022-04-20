@@ -84,15 +84,15 @@ namespace Modula
             }
         }
 
-        public static void RemoveWithDependencies(IModule module, ModularBehaviour main)
-        {
-            
-        }
-
-        public static void RemoveWithDependencies(IModule[] modules, ModularBehaviour main)
-        {
-            
-        }
+        // public static void RemoveWithDependencies(IModule module, ModularBehaviour main)
+        // {
+        //     
+        // }
+        //
+        // public static void RemoveWithDependencies(IModule[] modules, ModularBehaviour main)
+        // {
+        //     
+        // }
 
         /// <summary>
         ///     Check if a module has dependencies that are not present in this GameObject.
@@ -127,6 +127,14 @@ namespace Modula
             
             main.AddModules(missing.ToArray());
             return missing.Count > 0;
+        }
+
+
+        public static void Clear(ModularBehaviour main, bool printReason=false)
+        {
+            var reason = printReason ? ModuleRemoveReason.ClearingBehaviour : ModuleRemoveReason.__EMPTY;
+            if (main.attachments == null) return;
+            main.RemoveModules(main.attachments.ToArray(), reason);
         }
     }
 }

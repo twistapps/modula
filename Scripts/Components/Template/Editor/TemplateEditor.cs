@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Modula.Common;
+using Modula.Scripts.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,44 +11,82 @@ namespace Modula.Editor
     public class TemplateEditor : UnityEditor.Editor
     {
         private TypeNames<IModule> _selections;
+        private bool _dataLayerInitialized;
 
+        private Template template => (Template)target;
+        
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            if (!template.scriptable) base.OnInspectorGUI();
+            else
+            {
+                if (!DrawBanner())
+                {
+                    EditorGUILayout.HelpBox(template.scriptable.name + " Template", 
+                        MessageType.Info);
+                }
 
-            var template = (Template)target;
-            DrawBasepartSelectors(template);
+                DrawToolbox();
+                GUILayout.Space(20);
+            }
+
+            DrawBasepartSelectors();
+            
             GUILayout.Space(20);
-            ModuleManager();
-            ShowDebugInfo();
-
-            // GUILayout.Space(20);
-            // ModulaSettings.EditMode = EditorGUILayout.Toggle(new GUIContent("Edit Mode"),
-            //     ModulaSettings.EditMode);
+            
+            DrawModuleManager();
+            DrawDebugInfo();
+            
+            if (!_dataLayerInitialized)
+                InitializeDataLayer();
         }
 
-        // private bool HasBasepartsWithContent(List<BasePart> baseparts)
-        // {
-        //     foreach (var bp in baseparts)
-        //     {
-        //         if (bp != null && !ModulaUtilities.IsNullOrEmpty(bp.supports))
-        //         {
-        //             return true;
-        //         }
-        //
-        //         return false;
-        //     }
-        // }
-
-        private void DrawBasepartSelectors(Template template)
+        private bool DrawBanner()
         {
+            Texture banner = template.scriptable.banner;
+            if (!banner) return false;
+            
+            float widthRatio = .9f;
+            int minWidth     = 340;
+            int maxWidth     = 540;
+            
+            float width = Mathf.Clamp(Screen.width * widthRatio, minWidth, maxWidth);
+            float height = width / (banner.width / banner.height);
+            
+            //Debug.Log(width + " | " + height);
+            EditorGUI.DrawPreviewTexture(new Rect(Screen.width * (1 - (width / Screen.width)) * .5f,0, width, height), banner);
+            GUILayout.Space(height);
+            return true;
+        }
+
+        private void DrawToolbox()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Edit template", GUILayout.MaxWidth(100)))
+            {
+                Selection.activeObject = template.scriptable;
+            }
+            GUILayout.Space(Screen.width * .05f);
+            GUILayout.EndHorizontal();
+        }
+
+        private void InitializeDataLayer()
+        {
+            ModulaEditorUtilities.HandleDataLayer((ModularBehaviour) target);
+            _dataLayerInitialized = true;
+        }
+
+        private void DrawBasepartSelectors()
+        {
+            var template = (Template)target;
             if (template.scriptable == null)
             {
                 GUILayout.Box("Select a template above ^^");
+                _dataLayerInitialized = false;
                 return;
             }
-
-            GUILayout.Space(20);
+            
             GUILayout.Label("Select Modules:", EditorStyles.boldLabel);
 
             if (ModulaUtilities.IsNullOrEmpty(template.scriptable.baseparts))
@@ -56,10 +95,9 @@ namespace Modula.Editor
                 return;
             }
 
-            //if (!HasBasepartsWithContent(template.scriptable.baseparts))
             if (!template.AvailableModules.Any())
             {
-                GUILayout.Box("This template has basepart(s) but these baseparts have no available modules."+
+                GUILayout.Box("This template has basepart(s) but they don't have any modules available."+
                               " Please specify at least one supported module in a basepart.");
                 return;
             }
@@ -77,6 +115,18 @@ namespace Modula.Editor
             if (_selections?.Names != template.Selections)
                 _selections = new TypeNames<IModule>(template.Selections, false);
 
+            bool selectionsAreEmpty = ModulaUtilities.IsNullOrEmpty(_selections!.Types);
+            if (selectionsAreEmpty)
+            {
+                for (int i = 0; i < _selections.Types.Length; i++)
+                {
+                    var bp = template.scriptable.baseparts[i];
+                    if (bp.optional) continue;
+                    _selections[i] = bp.supports[0];
+                    HandleSelectionChange(i);
+                }
+            }
+
             for (var i = 0; i < basepartsCount; i++)
             {
                 if (basepartsCount != template.scriptable.baseparts.Count) break; //just in case count changes during draw process.
@@ -84,14 +134,12 @@ namespace Modula.Editor
 
                 if (ModulaUtilities.IsNullOrEmpty(basepart.supports)) continue;
 
-                var selectedIndex = ModulaUtilities.IsNullOrEmpty(_selections!.Types)
-                    ? 0
-                    : basepart.supports.IndexOf(_selections.GetName(i));
-                
+                var selectedIndex = selectionsAreEmpty ? 0 : basepart.supports.IndexOf(_selections.GetName(i));
                 if (selectedIndex == -1)
                 {
                     selectedIndex = 0;
                     _selections[0] = basepart.supports[0];
+                    if (!basepart.optional) HandleSelectionChange(i);
                 }
 
                 EditorGUI.BeginChangeCheck();
@@ -99,27 +147,19 @@ namespace Modula.Editor
                     basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
                 if (EditorGUI.EndChangeCheck())
                 {
-                    //template[i] = _selections.GetName(i);
-                    template.SetSelection(i, _selections.GetName(i));
-                    Debug.Log("Selected module: " + template.Selections[i], target);
+                    HandleSelectionChange(i);
                 }
             }
         }
-        
-        private void ShowDebugInfo()
+
+        private void HandleSelectionChange(int i)
         {
-            var moduleManager = (ModularBehaviour)target;
-            GUILayout.Space(20);
-            ModulaSettings.DebugMode = EditorGUILayout.Toggle(new GUIContent("Modular Entities Debug Mode"),
-                ModulaSettings.DebugMode);
-
-            //if (ModulaSettings.DebugMode) base.OnInspectorGUI();
-
-            foreach (var module in moduleManager.GetAttachments())
-                module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
+            var template = (Template)target;
+            template.SetSelection(i, _selections.GetName(i));
+            Debug.Log("Selected module: " + template.Selections[i], target);
         }
         
-        private void ModuleManager()
+        private void DrawModuleManager()
         {
             var moduleManager = (ModularBehaviour)target;
 
@@ -161,6 +201,17 @@ namespace Modula.Editor
                 }
 
             if (!hasAvailableModules) GUILayout.Label("This behaviour has no more available modules.");
+        }
+        
+        private void DrawDebugInfo()
+        {
+            var moduleManager = (ModularBehaviour)target;
+            GUILayout.Space(20);
+            ModulaSettings.DebugMode = EditorGUILayout.Toggle(new GUIContent("Modular Entities Debug Mode"),
+                ModulaSettings.DebugMode);
+
+            foreach (var module in moduleManager.GetAttachments())
+                module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
         }
     }
 }

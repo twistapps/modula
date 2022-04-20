@@ -49,26 +49,20 @@ namespace Modula
 
         private void HandleSelectionsChange(string[] oldValue, string[] newValue)
         {
-            if (oldValue != null)
-            {
-                var toRemove = oldValue.Except(newValue).Where(m => m != ModulaSettings.EMPTY_CHOICE).ToArray()
-                    .ToTypesArray<IModule>() as IModule[];
-                
-                DependencyWorker.RemoveWithDependencies(toRemove, this);
-            }
-            
-            var added = oldValue != null ? newValue.Except(oldValue) : newValue;
-            added = added.Where(m => m != ModulaSettings.EMPTY_CHOICE).ToArray();
-
-            AddModules(added.ToDerivedFrom<IModule>());
-
-            // foreach (var moduleName in added)
+            // foreach (var modname in newValue)
             // {
-            //     var toAdd = AvailableModules.FirstOrDefault(m => m.Name == moduleName);
-            //     if (toAdd == null) continue;
-            //     AddModule(toAdd);
+            //     Debug.Log(modname);
             // }
-            
+            DependencyWorker.Clear(this);
+            newValue = newValue.Where(v => v != ModulaSettings.EMPTY_CHOICE).ToArray();
+            AddModules(newValue.ToDerivedFrom<IModule>());
+        }
+
+        public override Type GetDataLayerType()
+        {
+            if (!scriptable) return null;
+            if (scriptable.dataLayerType == string.Empty) return null;
+            return ModulaUtilities.GetTypeByName<DataLayer>(scriptable.dataLayerType);
         }
     }
 }
