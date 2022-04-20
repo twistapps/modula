@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/twistapps/modula/compare/0.6.0...0.6.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* module duplicates are now being removed ([0bedecb](https://github.com/twistapps/modula/commit/0bedecb3df9ca3ed8a46ee1b0a1c21992f2a957f))
+
 # [0.6.0](https://github.com/twistapps/modula/compare/0.5.1...0.6.0) (2022-04-20)
 
 

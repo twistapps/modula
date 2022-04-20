@@ -2,7 +2,7 @@
   "name": "com.twistapps.modula",
   "displayName": "Modula",
   "description": "This package lets you split the code into smaller than usual, independent modules. \nWhen needed, inherit from ModularBehaviour instead of Unity's default MonoBehaviour class.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "unity": "2020.3",
   "license": "MIT",
   "documentationUrl": "http://modula.twistapps.com",
