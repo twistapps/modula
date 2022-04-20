@@ -61,11 +61,11 @@ namespace Modula.Common
 
         public static Type[] ToTypesArray<TParentClass>(this string[] typeNames)
         {
-            return GetDerivedFrom<IModule>().Where(m => typeNames.Contains(m.Name)).ToArray();
+            //return GetDerivedFrom<IModule>().Where(m => typeNames.Contains(m.Name)).ToArray();
             
-            // var types = new Type[typeNames.Length];
-            // for (var i = 0; i < types.Length; i++) types[i] = GetTypeByName<TParentClass>(typeNames[i]);
-            // return types;
+            var types = new Type[typeNames.Length];
+            for (var i = 0; i < types.Length; i++) types[i] = GetTypeByName<TParentClass>(typeNames[i]);
+            return types;
         }
 
         public static List<Type> ToTypesList<TParentClass>(this List<string> typeNames)

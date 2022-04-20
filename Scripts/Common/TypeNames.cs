@@ -51,9 +51,9 @@ namespace Modula.Common
             set
             {
                 // if (string.IsNullOrEmpty(value)) return;
-                // if (index < 0 || index >= Types.Length) return;
-                Types[index] = ModulaUtilities.GetTypeByName<TParentClass>(value);
+                //if (index < 0 || index >= Types.Length) return;
                 Names[index] = value;
+                Types[index] = ModulaUtilities.GetTypeByName<TParentClass>(value);
             }
         }
 
