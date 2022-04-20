@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Modula.Common;
+using Modula.Scripts.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +24,8 @@ namespace Modula.Editor
             }
 
             ShowDebugInfo();
-            HandleDataLayer();
+            ModulaEditorUtilities.HandleDataLayer(moduleManager);
+            //HandleDataLayer();
         }
 
         private void ModuleManager()
@@ -105,16 +107,6 @@ namespace Modula.Editor
             //     foreach (var module in moduleManager.GetModules())
             //         module.hideFlags = ModulaSettings.DebugMode ? HideFlags.None : HideFlags.HideInInspector;
             // }
-        }
-
-        private void HandleDataLayer()
-        {
-            var moduleManager = (ModularBehaviour)target;
-            var dataLayerType = moduleManager.GetDataLayerType();
-            if (dataLayerType == null) return;
-            if (moduleManager.GetData() != null) return;
-            var data = moduleManager.gameObject.AddComponent(dataLayerType) as DataLayer;
-            moduleManager.OnDataComponentCreated();
         }
 
         private void OnInspectorUpdate()
