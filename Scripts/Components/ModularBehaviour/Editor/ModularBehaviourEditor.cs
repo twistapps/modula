@@ -1,86 +1,22 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Modula.Common;
 using Modula.Scripts.Common;
+using Modula.Scripts.Common.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Modula.Editor
 {
     [CustomEditor(typeof(ModularBehaviour), true)]
-    public class ModularBehaviourEditor : UnityEditor.Editor
+    public class ModularBehaviourEditor : ModularBehaviourEditorBase
     {
         public override void OnInspectorGUI()
         {
             var moduleManager = (ModularBehaviour)target;
-            if (moduleManager.AvailableModules != null)
-            {
-                ModuleManager();
-            }
-            else
-            {
-                EditorGUILayout.HelpBox(new GUIContent("Modules"));
-                var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
-                GUILayout.Label("This ModularNetBehaviour has no available modules set up.", textStyle);
-            }
-
+            DrawModuleManager();
             ShowDebugInfo();
             ModulaEditorUtilities.HandleDataLayer(moduleManager);
-            //HandleDataLayer();
-        }
-
-        private void ModuleManager()
-        {
-            var mb = (ModularBehaviour)target;
-
-            EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
-            var hasAttachedModules = false;
-            foreach (var module in mb.GetAttachments())
-            {
-                hasAttachedModules = true;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(module.GetName());
-                var requiredOthers = module.RequiredOtherModules?.Types;
-                if (requiredOthers != null && requiredOthers.Count > 0)
-                {
-                    var requiredLabel = "Dependencies: ";
-                    foreach (var other in requiredOthers) requiredLabel += other.Name + "  ";
-                    var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
-                    GUILayout.Label(requiredLabel, textStyle);
-                }
-
-                if (GUILayout.Button("Remove", GUILayout.Width(80)))
-                {
-                    if (mb.CanRemove(module))
-                    {
-                        mb.RemoveModule(module, ModuleRemoveReason.RemovedFromGUI);
-                    }
-                    else
-                    {
-                        var errorText = "Can't remove module '" + module.GetType().Name +
-                                        "' because it is required by these other modules: " +
-                                        string.Join(", ", DependencyWorker.FindDependentModuleNames(module));
-                        Debug.LogError(errorText, target);
-                    }
-
-                    break;
-                }
-
-                GUILayout.EndHorizontal();
-            }
-
-            if (!hasAttachedModules) GUILayout.Label("No attached modules.");
-            GUILayout.Space(20);
-            EditorGUILayout.HelpBox(new GUIContent("Other Available Modules:"));
-            var hasAvailableModules = false;
-
-            foreach (var moduleType in mb.AvailableModules.Types)
-                if (mb.GetAttachments().Count(m => m.GetType() == moduleType) < 1)
-                {
-                    hasAvailableModules = true;
-                    if (GUILayout.Button("Add " + moduleType.Name)) mb.AddModule(moduleType);
-                }
-
-            if (!hasAvailableModules) GUILayout.Label("This behaviour has no more available modules.");
         }
 
         private void ShowDebugInfo()
