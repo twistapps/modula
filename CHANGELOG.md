@@ -1,3 +1,21 @@
+# [0.7.0](https://github.com/twistapps/modula/compare/0.6.1...0.7.0) (2022-04-21)
+
+
+### Bug Fixes
+
+* GetModule now returns null instead of throwing errors ([57163d9](https://github.com/twistapps/modula/commit/57163d91e4fb4dc6417048d7a7a4e5ad2cc2eb6f))
+* use new baseclass for MB ([d24ec93](https://github.com/twistapps/modula/commit/d24ec936c53d8239ab91c96f8e69851c6b9453db))
+
+
+### Features
+
+* auto bind DataLayer to templates by classname ([8e2a328](https://github.com/twistapps/modula/commit/8e2a328c12ce55cf511b86fc240d74dbc4f691fe))
+* edit serialized props of modules from UI ([e640451](https://github.com/twistapps/modula/commit/e64045180b7a1cf602e5acad85e915f00be2a3ad))
+* logging errors with Logger ([77f31e7](https://github.com/twistapps/modula/commit/77f31e704e1416e0e21cc4f5612b01b4d5353894))
+* new attribute 'ForModules', works with multiple modules ([db0f728](https://github.com/twistapps/modula/commit/db0f72819a46de1849dc7a4704552246d0c266c8))
+* New baseclass for MB-based components' editors ([c31d1a6](https://github.com/twistapps/modula/commit/c31d1a681450e2ec907942316767fb225e0f7439))
+* show if component is missing in template ([14ba32d](https://github.com/twistapps/modula/commit/14ba32d64650e39a3af1614fd8dfdcf8fab9a9ff))
+
 ## [0.6.1](https://github.com/twistapps/modula/compare/0.6.0...0.6.1) (2022-04-20)
 
 
