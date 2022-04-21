@@ -83,10 +83,10 @@ namespace Modula
         void GetComponentsInChildren<T>(List<T> results);
 
 #if UNITY_2021_1_OR_NEWER
-         Component GetComponentInParent(Type t, bool includeInactive);
-         Component GetComponentInParent(Type t);
-         T GetComponentInParent<T>(bool includeInactive);
-         T GetComponentInParent<T>();
+        Component GetComponentInParent(Type t, bool includeInactive);
+        Component GetComponentInParent(Type t);
+        T GetComponentInParent<T>(bool includeInactive);
+        T GetComponentInParent<T>();
 #endif
 
         Component[] GetComponentsInParent(Type t, bool includeInactive);

@@ -9,10 +9,9 @@ namespace Modula.Common
         MissingModule,
         PropertyNULL
     }
-    
+
     public class Logger
     {
-        
         private static string GetModuleRemoveReasonSlug(ModuleRemoveReason reason)
         {
             switch (reason)
@@ -28,12 +27,13 @@ namespace Modula.Common
                     return "Reason is not specified.";
             }
         }
-        
-        public static void LogRemovingModule(IModule module, ModuleRemoveReason reason, GameObject obj, bool shouldLog=true)
+
+        public static void LogRemovingModule(IModule module, ModuleRemoveReason reason, GameObject obj,
+            bool shouldLog = true)
         {
             if (!shouldLog) return;
             if (reason == ModuleRemoveReason.__EMPTY) return;
-            
+
             var message = string.Concat(
                 "Removing module: ", module.GetType().Name,
                 ", reason: ", GetModuleRemoveReasonSlug(reason),
@@ -50,7 +50,7 @@ namespace Modula.Common
                 default:
                     msg = "Unhandled error.";
                     break;
-                
+
                 case ErrorCode.MissingModule:
                     msg = "Missing Module";
                     break;
@@ -58,7 +58,7 @@ namespace Modula.Common
                     msg = "Required Property is NULL";
                     break;
             }
-            
+
             if (obj != null) msg += string.Concat("(on GameObject:", obj.name, ")");
             if (context != null) msg += string.Concat(": ", context);
             return msg;

@@ -54,7 +54,7 @@ namespace Modula.Editor
             forModule = attribute as ForModulesAttribute;
 
             var obj = (MonoBehaviour)property.serializedObject.targetObject;
-            bool hasAtLeastOneOfComponents =
+            var hasAtLeastOneOfComponents =
                 forModule!.targetComponents.Any(component => obj.GetComponent(component) != null);
             return hasAtLeastOneOfComponents;
         }

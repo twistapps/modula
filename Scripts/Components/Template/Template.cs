@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Modula.Common;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Modula
 {
     public class Template : ModularBehaviour
     {
         public TemplateScriptable scriptable;
-        [HideInInspector][SerializeField] private string[] _selections;
+        [HideInInspector] [SerializeField] private string[] _selections;
+
         public string[] Selections
         {
             get => _selections;
@@ -21,13 +19,6 @@ namespace Modula
                 HandleSelectionsChange(_selections, value);
                 _selections = value;
             }
-        }
-
-        public void SetSelection(int index, string value)
-        {
-            var oldValue = _selections.Copy();
-            _selections[index] = value;
-            HandleSelectionsChange(oldValue, _selections);
         }
 
         public override TypedList<IModule> AvailableModules
@@ -47,6 +38,13 @@ namespace Modula
             }
         }
 
+        public void SetSelection(int index, string value)
+        {
+            var oldValue = _selections.Copy();
+            _selections[index] = value;
+            HandleSelectionsChange(oldValue, _selections);
+        }
+
         private void HandleSelectionsChange(string[] oldValue, string[] newValue)
         {
             // foreach (var modname in newValue)
@@ -62,11 +60,9 @@ namespace Modula
         {
             if (!scriptable) return null;
             if (scriptable.dataLayerType == string.Empty)
-            {
                 return ModulaUtilities.GetDerivedFrom<DataLayer>()
                     .SingleOrDefault(type => type.Name == scriptable.name + ModulaSettings.DATA_SUFFIX);
-                //return null;
-            }
+            //return null;
             return ModulaUtilities.GetTypeByName<DataLayer>(scriptable.dataLayerType);
         }
     }

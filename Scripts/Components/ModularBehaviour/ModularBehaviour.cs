@@ -10,11 +10,37 @@ namespace Modula
 {
     public abstract class ModularBehaviour : MonoBehaviour
     {
-        private List<IModule> _modules;
         private static bool couldBeModifiedFromEditorUI => ModulaSettings.DebugMode;
         public abstract TypedList<IModule> AvailableModules { get; }
 
-        public List<IModule> attachments => _modules;
+        public List<IModule> attachments { get; private set; }
+
+        #region Lifecycle
+
+        private void Awake()
+        {
+            UpdateModules();
+        }
+
+        #endregion
+
+        private void UpdateModules(bool shouldResolveDependencies = true)
+        {
+            attachments = gameObject.FindComponents<IModule>();
+
+            if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
+                if (DependencyWorker.ResolveDependencies(attachments, this))
+                    return;
+
+            var toRemove = attachments.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m)).ToList();
+            foreach (var module in attachments)
+            {
+                var duplicate = attachments.FirstOrDefault(m => m.GetType() == module.GetType() && m != module);
+                if (duplicate != null) toRemove.Add(duplicate);
+            }
+
+            RemoveModules(toRemove.ToArray());
+        }
 
         #region Behaviour
 
@@ -22,11 +48,11 @@ namespace Modula
         {
             return GetComponent<DataLayer>();
         }
-        
+
         public virtual Type GetDataLayerType()
         {
             return ModulaUtilities.GetDerivedFrom<DataLayer>()
-                .SingleOrDefault(type => type.Name == this.GetType().Name + ModulaSettings.DATA_SUFFIX);
+                .SingleOrDefault(type => type.Name == GetType().Name + ModulaSettings.DATA_SUFFIX);
             //return null;
         }
 
@@ -41,7 +67,7 @@ namespace Modula
         private void OnModuleAdded(IModule module)
         {
             if (module == null) return;
-            _modules.Add(module);
+            attachments.Add(module);
             module.OnAdd();
             UpdateModules();
         }
@@ -50,9 +76,10 @@ namespace Modula
         {
             foreach (var module in modules)
             {
-                _modules.Add(module);
+                attachments.Add(module);
                 module.OnAdd();
             }
+
             UpdateModules();
         }
 
@@ -63,13 +90,13 @@ namespace Modula
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
             else
                 module = gameObject.AddComponent(moduleType) as IModule;
-            
+
             return module;
         }
 
         public void AddModule(Type type)
         {
-            if (_modules.Any(m => m.GetType() == type)) return;
+            if (attachments.Any(m => m.GetType() == type)) return;
             var module = CreateModuleComponent(type);
             OnModuleAdded(module);
         }
@@ -81,11 +108,8 @@ namespace Modula
 
         public void AddModules(Type[] types)
         {
-            types = types.Where(m => _modules.All(a => a.GetType() != m)).ToArray();
-            foreach (var type in types)
-            {
-                CreateModuleComponent(type);
-            }
+            types = types.Where(m => attachments.All(a => a.GetType() != m)).ToArray();
+            foreach (var type in types) CreateModuleComponent(type);
         }
 
         #endregion
@@ -95,34 +119,34 @@ namespace Modula
         public List<IModule> GetAttachments()
         {
             UpdateModules();
-            return _modules;
+            return attachments;
         }
 
         public T GetModule<T>() where T : IModule
         {
-            return (T)_modules.FirstOrDefault(m => m.GetType() == typeof(T));
+            return (T)attachments.FirstOrDefault(m => m.GetType() == typeof(T));
         }
 
         public IModule GetModule(string typeName)
         {
-            return _modules.Find(m => m.GetName() == typeName);
+            return attachments.Find(m => m.GetName() == typeName);
         }
 
         public IModule GetModule(Type moduleType)
         {
-            return _modules?.FirstOrDefault(m => m.GetType() == moduleType);
+            return attachments?.FirstOrDefault(m => m.GetType() == moduleType);
             //return _modules.Find(m => m.GetType() == moduleType);
         }
 
         #endregion
-        
+
         #region Removing
 
         //todo: recursively check dependencies of dependencies
         // IsRequiredByOtherAttachments
         public bool CanRemove(IModule module)
         {
-            return _modules.All(m =>
+            return attachments.All(m =>
             {
                 var required = m.RequiredOtherModules;
                 return required == null || !required.Contains(module.GetType());
@@ -143,20 +167,17 @@ namespace Modula
                 Destroy(module as MonoBehaviour);
             }
         }
-        
+
         public void RemoveModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
         {
-            _modules.Remove(module);
+            attachments.Remove(module);
             DestroyModule(module, reason);
         }
 
         public void RemoveModules(IModule[] toRemove, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
         {
-            _modules = _modules.Except(toRemove).ToList();
-            foreach (var module in toRemove)
-            {
-                DestroyModule(module, reason);
-            }
+            attachments = attachments.Except(toRemove).ToList();
+            foreach (var module in toRemove) DestroyModule(module, reason);
         }
 
         #endregion
@@ -171,32 +192,6 @@ namespace Modula
         public bool HasModule(Type type)
         {
             return GetModule(type) != null;
-        }
-
-        #endregion
-        
-        private void UpdateModules(bool shouldResolveDependencies=true)
-        {
-            _modules = gameObject.FindComponents<IModule>();
-            
-            if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
-                if (DependencyWorker.ResolveDependencies(_modules, this))
-                    return;
-
-            var toRemove = _modules.Where(m => !AvailableModules.Contains(m.GetType()) && CanRemove(m)).ToList();
-            foreach (var module in _modules)
-            {
-                var duplicate = _modules.FirstOrDefault(m => m.GetType() == module.GetType() && m != module);
-                if (duplicate != null) toRemove.Add(duplicate);
-            }
-            RemoveModules(toRemove.ToArray());
-        }
-
-        #region Lifecycle
-
-        private void Awake()
-        {
-            UpdateModules();
         }
 
         #endregion

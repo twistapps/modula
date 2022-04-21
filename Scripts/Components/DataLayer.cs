@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Modula
 {
-    public abstract partial class DataLayer : MonoBehaviour
+    public abstract class DataLayer : MonoBehaviour
     {
-        protected readonly Dictionary<string, bool> booleans = new Dictionary<string, bool>();
-        protected readonly Dictionary<string, float> floats = new Dictionary<string, float>();
-        protected readonly Dictionary<string, int> integers = new Dictionary<string, int>();
-        protected readonly Dictionary<string, string> strings = new Dictionary<string, string>();
-        protected readonly Dictionary<string, Type> types = new Dictionary<string, Type>();
+        protected readonly Dictionary<string, bool> booleans = new();
+        protected readonly Dictionary<string, float> floats = new();
+        protected readonly Dictionary<string, int> integers = new();
+        protected readonly Dictionary<string, string> strings = new();
+        protected readonly Dictionary<string, Type> types = new();
 
         public bool KeyExists(string key)
         {
@@ -94,7 +94,7 @@ namespace Modula
         // }
 
         #endregion
-        
+
         #region Initialization
 
         private readonly string _keyInitialized = "initialized";
@@ -111,10 +111,10 @@ namespace Modula
         }
 
         #endregion
-        
+
         #region Components
 
-        protected readonly Dictionary<string, Component> components = new Dictionary<string, Component>();
+        protected readonly Dictionary<string, Component> components = new();
 
         public void SetComponent(string key, Component data, bool doOverride = false)
         {

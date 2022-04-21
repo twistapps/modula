@@ -14,7 +14,7 @@ namespace Modula
             this.targetComponents = targetComponents;
             DrawDisabledType = drawDisabledAs;
         }
-        
+
         public ForModulesAttribute(params Type[] targetComponents)
         {
             this.targetComponents = targetComponents;

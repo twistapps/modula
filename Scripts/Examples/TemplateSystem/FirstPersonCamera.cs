@@ -1,6 +1,4 @@
-﻿using Modula.Common;
-
-namespace Modula.Examples
+﻿namespace Modula.Examples
 {
     public class FirstPersonCamera : Module
     {

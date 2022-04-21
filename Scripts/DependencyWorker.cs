@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Modula.Common;
-using UnityEditor;
-using UnityEngine;
 
 namespace Modula
 {
@@ -17,7 +15,7 @@ namespace Modula
                 var required = m.RequiredOtherModules;
                 return required != null && required.Contains(module.GetType());
             });
-            
+
             return dependent.ToArray();
         }
 
@@ -32,20 +30,17 @@ namespace Modula
         {
             dependencies ??= new HashSet<IModule> { module };
             dependencies.Add(module);
-            
+
             var found = FindDependencies(module).Where(d => !dependencies.Contains(d)).ToArray();
-            
+
             if (found.Length == 0)
             {
                 dependencies.Add(module);
                 return dependencies;
             }
-            
-            foreach (var m in found)
-            {
-                dependencies.UnionWith(FindDependenciesRecursive(m, dependencies));
-            }
-            
+
+            foreach (var m in found) dependencies.UnionWith(FindDependenciesRecursive(m, dependencies));
+
             return dependencies;
         }
 
@@ -56,30 +51,23 @@ namespace Modula
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="module"></param>
         /// <param name="forceDelete">Remove dependencies even if other modules depend on them</param>
         /// <param name="reason"></param>
         /// <param name="ignore"></param>
-        public static void RemoveModuleWithDependencies(IModule module, bool forceDelete=false,
+        public static void RemoveModuleWithDependencies(IModule module, bool forceDelete = false,
             ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
         {
             var attachments = module.Main.attachments;
-            var dependencies = FindDependenciesRecursive(module);//.Reverse().ToArray();
+            var dependencies = FindDependenciesRecursive(module); //.Reverse().ToArray();
             foreach (var dependency in dependencies)
             {
-                bool whitelist = false;
+                var whitelist = false;
                 if (!forceDelete)
-                {
-                    foreach (var other in attachments.Where(m => !dependencies.Contains(m)) )
-                    {
+                    foreach (var other in attachments.Where(m => !dependencies.Contains(m)))
                         if (FindDependencies(other).Contains(dependency))
-                        {
                             whitelist = true;
-                        }
-                    }
-                }
                 if (!whitelist) module.Main.RemoveModule(dependency);
             }
         }
@@ -119,18 +107,16 @@ namespace Modula
             var attachments = main.attachments.Select(module => module.GetType());
             var missing = new List<Type>();
             foreach (var module in modules)
-            {
                 missing.AddRange(module.RequiredOtherModules.Where(
                     requirement => !attachments.Contains(requirement))
                 );
-            }
-            
+
             main.AddModules(missing.ToArray());
             return missing.Count > 0;
         }
 
 
-        public static void Clear(ModularBehaviour main, bool printReason=false)
+        public static void Clear(ModularBehaviour main, bool printReason = false)
         {
             var reason = printReason ? ModuleRemoveReason.ClearingBehaviour : ModuleRemoveReason.__EMPTY;
             if (main.attachments == null) return;

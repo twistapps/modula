@@ -7,9 +7,9 @@ namespace Modula
 {
     public abstract class Module : MonoBehaviour, IModule
     {
+        private ModuleDefaultImplementation _defaultImplementation;
         public virtual TypeList replaces { get; } = TypeList.None;
 
-        private ModuleDefaultImplementation _defaultImplementation;
         // ReSharper disable once MemberCanBePrivate.Global
         protected ModuleDefaultImplementation DefaultImplementation
         {
@@ -22,7 +22,7 @@ namespace Modula
         }
 
         public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
-        public virtual TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>();
+        public virtual TypedList<IModule> RequiredOtherModules { get; } = new();
 
         public ModularBehaviour Main => DefaultImplementation.Main;
 
@@ -51,11 +51,13 @@ namespace Modula
             ModuleUpdate();
         }
 
-        protected virtual void ModuleUpdate() { }
-
         public virtual bool ShouldSerialize()
         {
             return true;
+        }
+
+        protected virtual void ModuleUpdate()
+        {
         }
     }
 }

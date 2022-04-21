@@ -21,7 +21,7 @@ namespace Modula.Scripts.Common
             //         return;
             //     }
             // }
-            
+
             mb.gameObject.AddComponent(dataLayerType);
             mb.OnDataComponentCreated();
         }
@@ -29,13 +29,9 @@ namespace Modula.Scripts.Common
         private static void DestroyComponentBasedOnEnvironment(Component component)
         {
             if (Application.isEditor && !Application.isPlaying)
-            {
                 Undo.DestroyObjectImmediate(component);
-            }
             else
-            {
-                GameObject.Destroy(component);
-            }
+                Object.Destroy(component);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Modula.Common
     public static class ModulaUtilities
     {
         //cache results of GetDerivedFrom() because it's a pretty expensive method
-        private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new Dictionary<Type, Type[]>();
+        private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new();
 
         public static Type[] GetDerivedFrom<T>(Type[] ignored = null)
         {
@@ -35,7 +35,7 @@ namespace Modula.Common
 
             return foundArr;
         }
-        
+
         public static Type GetTypeByName<TParentClass>(string name)
         {
             if (name == null) return null;
@@ -45,14 +45,15 @@ namespace Modula.Common
 
         public static string[] Copy(this string[] source)
         {
-            string[] copy = new string[source.Length];
-            for (int i = 0; i < source.Length; i++)
+            var copy = new string[source.Length];
+            for (var i = 0; i < source.Length; i++)
             {
                 if (source[i] == null)
                 {
                     copy[i] = null;
                     continue;
-                } 
+                }
+
                 copy[i] = string.Copy(source[i]);
             }
 
@@ -62,7 +63,7 @@ namespace Modula.Common
         public static Type[] ToTypesArray<TParentClass>(this string[] typeNames)
         {
             //return GetDerivedFrom<IModule>().Where(m => typeNames.Contains(m.Name)).ToArray();
-            
+
             var types = new Type[typeNames.Length];
             for (var i = 0; i < types.Length; i++) types[i] = GetTypeByName<TParentClass>(typeNames[i]);
             return types;

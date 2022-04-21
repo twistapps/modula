@@ -9,6 +9,6 @@ namespace Modula
         public new string name = "Template";
         public Texture banner;
         public string dataLayerType = "";
-        public List<BasePart> baseparts = new List<BasePart>();
+        public List<BasePart> baseparts = new();
     }
 }

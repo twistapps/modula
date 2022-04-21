@@ -10,11 +10,11 @@ namespace Modula.Editor
     [CustomEditor(typeof(BasePart), true)]
     public class BasepartEditor : UnityEditor.Editor
     {
+        private bool _isOptional;
         private Type[] _registeredModules;
         private List<bool> _selectedModules;
         private bool _showSelectionMenu = true;
-        private bool _isOptional;
-        
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -23,7 +23,7 @@ namespace Modula.Editor
             Init(basepart);
             ModuleManager(basepart);
             LogSupports(basepart);
-            
+
             if (_isOptional != basepart.optional)
             {
                 OnModuleSelectionChange(basepart);
@@ -49,25 +49,23 @@ namespace Modula.Editor
         {
             return _registeredModules.FirstOrDefault(t => t.Name == name);
         }
-        
+
         private void ModuleManager(BasePart basepart)
         {
             _showSelectionMenu = EditorGUILayout.Foldout(_showSelectionMenu, "Supported Modules");
             if (_showSelectionMenu)
-            {
                 for (var i = 0; i < _registeredModules.Length; i++)
                 {
                     var current = _registeredModules[i];
                     _selectedModules[i] = basepart.supports != null && basepart.supports.Contains(current.Name);
-                    
+
                     EditorGUI.BeginChangeCheck();
                     _selectedModules[i] = GUILayout.Toggle(_selectedModules[i], current.Name);
                     if (EditorGUI.EndChangeCheck())
                         OnModuleSelectionChange(basepart);
                 }
-            }
         }
-        
+
         private void OnModuleSelectionChange(BasePart basepart)
         {
             basepart.supports = new List<string>();

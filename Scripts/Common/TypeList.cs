@@ -8,9 +8,9 @@ namespace Modula.Common
     public class TypeList
     {
         [SerializeField] private bool hasTypes;
-        [SerializeField] public List<Type> Types { get; } = new List<Type>();
+        [SerializeField] public List<Type> Types { get; } = new();
 
-        public static TypeList None => new TypeList();
+        public static TypeList None => new();
 
         public bool Contains(Type behaviour)
         {

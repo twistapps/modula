@@ -9,7 +9,7 @@ namespace Modula.Common
     public class TypedList<T> : IEnumerable<Type>
     {
         [SerializeField] private bool hasTypes;
-        [SerializeField] public List<Type> Types { get; } = new List<Type>();
+        [SerializeField] public List<Type> Types { get; } = new();
 
         public IEnumerator<Type> GetEnumerator()
         {

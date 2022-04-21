@@ -9,7 +9,7 @@ namespace Modula.Scripts.Common.Editor
     public class ModularBehaviourEditorBase : UnityEditor.Editor
     {
         private Dictionary<string, bool> _foldoutActive;
-        
+
         private void ShowSetupIncompleteNotice()
         {
             EditorGUILayout.HelpBox(new GUIContent("Modules"));
@@ -46,10 +46,7 @@ namespace Modula.Scripts.Common.Editor
             if (_foldoutActive == null || _foldoutActive.Keys.Count != attachmentNames.Count())
             {
                 _foldoutActive = new Dictionary<string, bool>(attachments.Count);
-                foreach (var module in attachments)
-                {
-                    _foldoutActive[module.GetType().Name] = false;
-                }
+                foreach (var module in attachments) _foldoutActive[module.GetType().Name] = false;
                 //Debug.Log("Foldout info rebuilt");
             }
 
@@ -60,19 +57,19 @@ namespace Modula.Scripts.Common.Editor
             //     deb += name + "\n";
             // }
             // Debug.Log(deb);
-            
+
             foreach (var module in attachments)
             {
                 hasAttachedModules = true;
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(module.GetName());
                 GUILayout.FlexibleSpace();
-                
-                _foldoutActive[module.GetType().Name] = GUILayout.Toggle(_foldoutActive[module.GetType().Name], "Edit Properties");
+
+                _foldoutActive[module.GetType().Name] =
+                    GUILayout.Toggle(_foldoutActive[module.GetType().Name], "Edit Properties");
 
                 if (canRemoveModules)
                 {
-
                     if (GUILayout.Button("Remove", GUILayout.Width(80)))
                     {
                         if (mb.CanRemove(module))
@@ -101,8 +98,8 @@ namespace Modula.Scripts.Common.Editor
 
                 if (_foldoutActive[module.GetType().Name])
                 {
-                    GUILayout.BeginVertical("Properties","Window");
-                    var editor = UnityEditor.Editor.CreateEditor(module as Object);
+                    GUILayout.BeginVertical("Properties", "Window");
+                    var editor = CreateEditor(module as Object);
                     editor.OnInspectorGUI();
                     GUILayout.Space(8);
                     var requiredOthers = module.RequiredOtherModules?.Types;
@@ -114,6 +111,7 @@ namespace Modula.Scripts.Common.Editor
                         var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
                         GUILayout.Label(requiredLabel, textStyle);
                     }
+
                     GUILayout.EndVertical();
                 }
             }
@@ -121,7 +119,7 @@ namespace Modula.Scripts.Common.Editor
             if (!hasAttachedModules) GUILayout.Label("No attached modules.");
             GUILayout.Space(20);
         }
-        
+
         protected void DrawModuleManager(
             bool shouldDrawAttachedModules = true,
             bool shouldDrawAvailableModules = true,
@@ -129,22 +127,16 @@ namespace Modula.Scripts.Common.Editor
             bool canRemoveModules = true)
         {
             var mb = (ModularBehaviour)target;
-            
+
             if (mb.AvailableModules == null)
             {
                 ShowSetupIncompleteNotice();
                 return;
             }
 
-            if (shouldDrawAttachedModules)
-            {
-                DrawAttachedModules(canRemoveModules);
-            }
+            if (shouldDrawAttachedModules) DrawAttachedModules(canRemoveModules);
 
-            if (shouldDrawAvailableModules)
-            {
-                DrawAvailableModules(canAddModules);
-            }
+            if (shouldDrawAvailableModules) DrawAvailableModules(canAddModules);
         }
     }
 }

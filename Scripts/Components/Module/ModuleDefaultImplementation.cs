@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Modula.Optimization;
 using UnityEngine;
 
 namespace Modula
 {
-    public partial class ModuleDefaultImplementation
+    public class ModuleDefaultImplementation
     {
         private readonly IModule _boundModule;
         //private List<IModule> attachments;
@@ -62,7 +61,7 @@ namespace Modula
         {
             UpdateConstraints.Update(Time.deltaTime);
         }
-        
+
         private T[] FindComponents<T>()
         {
             return _boundModule.gameObject.FindComponents<T>().ToArray();
