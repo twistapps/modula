@@ -61,7 +61,12 @@ namespace Modula
         public override Type GetDataLayerType()
         {
             if (!scriptable) return null;
-            if (scriptable.dataLayerType == string.Empty) return null;
+            if (scriptable.dataLayerType == string.Empty)
+            {
+                return ModulaUtilities.GetDerivedFrom<DataLayer>()
+                    .SingleOrDefault(type => type.Name == scriptable.name + ModulaSettings.DATA_SUFFIX);
+                //return null;
+            }
             return ModulaUtilities.GetTypeByName<DataLayer>(scriptable.dataLayerType);
         }
     }
