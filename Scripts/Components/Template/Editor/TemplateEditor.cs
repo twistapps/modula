@@ -159,7 +159,7 @@ namespace Modula.Editor
                 if (EditorGUI.EndChangeCheck())
                 {
                     HandleSelectionChange(i);
-                    _foldoutActive = new bool[basepartsCount];
+                    //_foldoutActive = new bool[basepartsCount];
                 }
                 GUILayout.EndHorizontal();
                 
@@ -168,26 +168,39 @@ namespace Modula.Editor
                     GUILayout.Space(3);
                     //EditorGUILayout.HelpBox("Properties", MessageType.Info);
                     IModule module = template.GetModule(_selections.Types[i]);
+                    if (module == null)
+                    {
+                        EditorGUILayout.HelpBox("Missing Component", MessageType.Warning);
+                        var missingModuleName = basepart.supports[selectedIndex];
+                        if (GUILayout.Button("Add component: " + missingModuleName))
+                        {
+                            template.AddModule(ModulaUtilities.GetTypeByName<IModule>(missingModuleName));
+                        }
+                        continue;
+                    }
                     List<IModule> dependencies = new List<IModule>();// { module };
                     dependencies.AddRange(DependencyWorker.FindDependenciesRecursive(module));
+                    dependencies = dependencies.Where(dep => _selections.Types.All(sel => sel == module.GetType() || sel != dep.GetType())).ToList(); // - hide duplicates
 
                     bool first = true;
                     foreach (var dep in dependencies)
                     {
                         if (!dep.ShouldSerialize()) continue;
                         string style = first ? "Window" : "CN Box";
-                        //GUILayout.BeginVertical(dep.name,"Window");
                         GUILayout.Space(3);
                         GUILayout.BeginVertical(style);
                         if (first) GUILayout.Space(-18);
-                        string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
+                        //string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
                         //GUILayout.Label(dep.GetType().Name);
                         var editor = UnityEditor.Editor.CreateEditor(dep as Object);
                         editor.OnInspectorGUI();
                         
-                        first = false;
                         GUILayout.Space(3);
                         GUILayout.EndVertical();
+                        
+                        if (first) GUILayout.Space(10);
+                        
+                        first = false;
                     }
                 }
             }
