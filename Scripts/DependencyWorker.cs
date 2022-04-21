@@ -9,7 +9,7 @@ namespace Modula
 {
     public static class DependencyWorker
     {
-        private static IModule[] FindDependent(IModule module)
+        public static IModule[] FindDependent(IModule module)
         {
             var attachments = module.Main.attachments;
             var dependent = attachments.Where(m =>
@@ -21,14 +21,14 @@ namespace Modula
             return dependent.ToArray();
         }
 
-        private static IModule[] FindDependencies(IModule module)
+        public static IModule[] FindDependencies(IModule module)
         {
             var attachments = module.Main.attachments;
             return attachments.Where(m =>
                 module.RequiredOtherModules.Contains(m.GetType())).ToArray();
         }
 
-        private static HashSet<IModule> FindDependenciesRecursive(IModule module, HashSet<IModule> dependencies = null)
+        public static HashSet<IModule> FindDependenciesRecursive(IModule module, HashSet<IModule> dependencies = null)
         {
             dependencies ??= new HashSet<IModule> { module };
             dependencies.Add(module);
