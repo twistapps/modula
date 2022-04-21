@@ -110,7 +110,8 @@ namespace Modula
 
         public IModule GetModule(Type moduleType)
         {
-            return _modules.Find(m => m.GetType() == moduleType);
+            return _modules?.FirstOrDefault(m => m.GetType() == moduleType);
+            //return _modules.Find(m => m.GetType() == moduleType);
         }
 
         #endregion
@@ -132,8 +133,10 @@ namespace Modula
         {
             if (Application.isEditor && !Application.isPlaying)
             {
+                var mono = module as MonoBehaviour;
+                if (mono == null) return;
                 Logger.LogRemovingModule(module, reason, gameObject);
-                Undo.DestroyObjectImmediate(module as MonoBehaviour);
+                Undo.DestroyObjectImmediate(mono);
             }
             else
             {
@@ -154,6 +157,20 @@ namespace Modula
             {
                 DestroyModule(module, reason);
             }
+        }
+
+        #endregion
+
+        #region Checks
+
+        public bool HasModule<T>() where T : IModule
+        {
+            return GetModule<T>() != null;
+        }
+
+        public bool HasModule(Type type)
+        {
+            return GetModule(type) != null;
         }
 
         #endregion
