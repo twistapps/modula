@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/twistapps/modula/compare/0.7.0...0.7.1) (2022-04-21)
+
+
+### Bug Fixes
+
+* massive code cleanup ([3049180](https://github.com/twistapps/modula/commit/3049180c323896c050619036576373289fb45745))
+
 # [0.7.0](https://github.com/twistapps/modula/compare/0.6.1...0.7.0) (2022-04-21)
 
 
