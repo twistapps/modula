@@ -24,6 +24,8 @@ namespace Modula
         void ManagedUpdate();
         TimingConstraints UpdateInvocationConstraints { get; }
 
+        bool ShouldSerialize();
+
         #endregion
 
         #region MonoBehaviour

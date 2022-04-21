@@ -2,13 +2,14 @@
 using System.Linq;
 using Modula.Common;
 using Modula.Scripts.Common;
+using Modula.Scripts.Common.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Modula.Editor
 {
     [CustomEditor(typeof(Template), true)]
-    public class TemplateEditor : UnityEditor.Editor
+    public class TemplateEditor : ModularBehaviourEditorBase
     {
         private TypeNames<IModule> _selections;
         private bool _dataLayerInitialized;
@@ -34,7 +35,7 @@ namespace Modula.Editor
             
             GUILayout.Space(20);
             
-            DrawModuleManager();
+            //DrawModuleManager(shouldDrawAvailableModules: false, canRemoveModules: false);
             DrawDebugInfo();
             
             if (!_dataLayerInitialized)
@@ -77,6 +78,9 @@ namespace Modula.Editor
             _dataLayerInitialized = true;
         }
 
+        
+        private bool[] _foldoutActive;
+        
         private void DrawBasepartSelectors()
         {
             var template = (Template)target;
@@ -142,12 +146,49 @@ namespace Modula.Editor
                     if (!basepart.optional) HandleSelectionChange(i);
                 }
 
+                GUILayout.BeginHorizontal();
+                if (_foldoutActive == null || _foldoutActive.Length != basepartsCount)
+                {
+                    _foldoutActive = new bool[basepartsCount];
+                }
+                _foldoutActive[i] = EditorGUILayout.Foldout(_foldoutActive[i], basepart.name);
                 EditorGUI.BeginChangeCheck();
                 _selections[i] =
-                    basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
+                    //basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
+                    basepart.supports[EditorGUILayout.Popup(selectedIndex, basepart.supports.ToArray())];
                 if (EditorGUI.EndChangeCheck())
                 {
                     HandleSelectionChange(i);
+                    _foldoutActive = new bool[basepartsCount];
+                }
+                GUILayout.EndHorizontal();
+                
+                if (_foldoutActive[i])
+                {
+                    GUILayout.Space(3);
+                    //EditorGUILayout.HelpBox("Properties", MessageType.Info);
+                    IModule module = template.GetModule(_selections.Types[i]);
+                    List<IModule> dependencies = new List<IModule>();// { module };
+                    dependencies.AddRange(DependencyWorker.FindDependenciesRecursive(module));
+
+                    bool first = true;
+                    foreach (var dep in dependencies)
+                    {
+                        if (!dep.ShouldSerialize()) continue;
+                        string style = first ? "Window" : "CN Box";
+                        //GUILayout.BeginVertical(dep.name,"Window");
+                        GUILayout.Space(3);
+                        GUILayout.BeginVertical(style);
+                        if (first) GUILayout.Space(-18);
+                        string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
+                        //GUILayout.Label(dep.GetType().Name);
+                        var editor = UnityEditor.Editor.CreateEditor(dep as Object);
+                        editor.OnInspectorGUI();
+                        
+                        first = false;
+                        GUILayout.Space(3);
+                        GUILayout.EndVertical();
+                    }
                 }
             }
         }
@@ -157,50 +198,6 @@ namespace Modula.Editor
             var template = (Template)target;
             template.SetSelection(i, _selections.GetName(i));
             Debug.Log("Selected module: " + template.Selections[i], target);
-        }
-        
-        private void DrawModuleManager()
-        {
-            var moduleManager = (ModularBehaviour)target;
-
-            EditorGUILayout.HelpBox(new GUIContent("Attached Modules:"));
-            var hasAttachedModules = false;
-            foreach (var module in moduleManager.GetAttachments())
-            {
-                hasAttachedModules = true;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(module.GetName());
-                var requiredOthers = module.RequiredOtherModules?.Types;
-                if (requiredOthers != null && requiredOthers.Count > 0)
-                {
-                    var requiredLabel = "Dependencies: ";
-                    foreach (var other in requiredOthers) requiredLabel += other.Name + "  ";
-                    var textStyle = new GUIStyle { normal = { textColor = Color.gray } };
-                    GUILayout.Label(requiredLabel, textStyle);
-                }
-
-                GUI.enabled = false;
-                GUILayout.Button("Remove", GUILayout.Width(80));
-                GUI.enabled = true;
-
-                GUILayout.EndHorizontal();
-            }
-
-            if (!hasAttachedModules) GUILayout.Label("No attached modules.");
-            GUILayout.Space(20);
-            EditorGUILayout.HelpBox(new GUIContent("Other Available Modules:"));
-            var hasAvailableModules = false;
-
-            foreach (var moduleType in moduleManager.AvailableModules.Types)
-                if (moduleManager.GetAttachments().Count(m => m.GetType() == moduleType) < 1)
-                {
-                    hasAvailableModules = true;
-                    GUI.enabled = false;
-                    GUILayout.Button("Add " + moduleType.Name);
-                    GUI.enabled = true;
-                }
-
-            if (!hasAvailableModules) GUILayout.Label("This behaviour has no more available modules.");
         }
         
         private void DrawDebugInfo()

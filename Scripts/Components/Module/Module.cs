@@ -46,13 +46,16 @@ namespace Modula
             return DefaultImplementation.GetData();
         }
 
-        public virtual void ManagedUpdate()
+        public void ManagedUpdate()
         {
             ModuleUpdate();
         }
 
-        public virtual void ModuleUpdate()
+        protected virtual void ModuleUpdate() { }
+
+        public virtual bool ShouldSerialize()
         {
+            return true;
         }
     }
 }
