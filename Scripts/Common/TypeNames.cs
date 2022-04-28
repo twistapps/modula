@@ -6,7 +6,7 @@ namespace Modula.Common
 {
     /// <summary>
     ///     This class associates Types with their names in string format. This could be useful if you need to get Type by its
-    ///     name (GetType(string name))
+    ///     name: 'GetType(string name)'
     ///     All types should be derived from the same interface/class
     /// </summary>
     /// <typeparam name="TParentClass">the parent class/interface for all associated types</typeparam>
@@ -27,7 +27,7 @@ namespace Modula.Common
         {
             if (types == null)
             {
-                Debug.LogWarning("types array should not be null while creating TypeNames instance");
+                Debug.LogWarning("types array should not be null when creating TypeNames instance");
                 return;
             }
 
