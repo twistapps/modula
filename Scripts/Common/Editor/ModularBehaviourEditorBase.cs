@@ -100,7 +100,8 @@ namespace Modula.Scripts.Common.Editor
                 {
                     GUILayout.BeginVertical("Properties", "Window");
                     var editor = CreateEditor(module as Object);
-                    editor.OnInspectorGUI();
+                    //editor.OnInspectorGUI();  //replaced with the method below because this has been causing fatal error: StackOverflow
+                    editor.DrawDefaultInspector();
                     GUILayout.Space(8);
                     var requiredOthers = module.RequiredOtherModules?.Types;
                     if (requiredOthers != null && requiredOthers.Count > 0)

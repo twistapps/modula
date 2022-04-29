@@ -17,10 +17,16 @@ namespace Modula.Editor
         private bool[] _foldoutActive;
         private TypeNames<IModule> _selections;
 
-        private Template template => (Template)target;
+        private Template template;
 
         public override void OnInspectorGUI()
         {
+            if (template == null || (Template)target != template)
+            {
+                template = (Template)target;
+                _foldoutActive = null;
+                _selections = null;
+            }
             if (!template.scriptable)
             {
                 base.OnInspectorGUI();
@@ -159,7 +165,7 @@ namespace Modula.Editor
                 if (_foldoutActive[i])
                 {
                     GUILayout.Space(3);
-                    //EditorGUILayout.HelpBox("Properties", MessageType.Info);
+                    if (_selections.Types[i] == null) continue;
                     var module = template.GetModule(_selections.Types[i]);
                     if (module == null)
                     {
@@ -186,8 +192,12 @@ namespace Modula.Editor
                         if (first) GUILayout.Space(-18);
                         //string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
                         //GUILayout.Label(dep.GetType().Name);
+                        
                         var editor = CreateEditor(dep as Object);
-                        editor.OnInspectorGUI();
+                        //editor.OnInspectorGUI(); //replaced with the method below because this has been causing fatal error: StackOverflow
+                        EditorGUI.indentLevel++;
+                        editor.DrawDefaultInspector();
+                        EditorGUI.indentLevel--;
 
                         GUILayout.Space(3);
                         GUILayout.EndVertical();
