@@ -94,16 +94,17 @@ namespace Modula
             return module;
         }
 
-        public void AddModule(Type type)
+        public IModule AddModule(Type type)
         {
-            if (attachments.Any(m => m.GetType() == type)) return;
+            if (attachments.Any(m => m.GetType() == type)) return null;
             var module = CreateModuleComponent(type);
             OnModuleAdded(module);
+            return module;
         }
 
-        public void AddModule<T>() where T : IModule
+        public IModule AddModule<T>() where T : IModule
         {
-            AddModule(typeof(T));
+            return AddModule(typeof(T));
         }
 
         public void AddModules(Type[] types)
@@ -136,6 +137,11 @@ namespace Modula
         {
             return attachments?.FirstOrDefault(m => m.GetType() == moduleType);
             //return _modules.Find(m => m.GetType() == moduleType);
+        }
+
+        public T GetModuleByBase<T>() where T : IModule
+        {
+            return (T)attachments.FirstOrDefault(m => m.GetType().IsSubclassOf(typeof(T)));
         }
 
         #endregion
