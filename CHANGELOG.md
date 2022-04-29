@@ -1,3 +1,17 @@
+# [0.8.0](https://github.com/twistapps/modula/compare/0.7.1...0.8.0) (2022-04-29)
+
+
+### Bug Fixes
+
+* Added metafiles ([c293bbc](https://github.com/twistapps/modula/commit/c293bbcf3886038e3b0208bb007f0f9b196760f8))
+* fatal error: Stack Overflow ([f9741e9](https://github.com/twistapps/modula/commit/f9741e95408de0c8739f3a8a043dbeb30e866b79))
+* fix typos ([9c248f9](https://github.com/twistapps/modula/commit/9c248f9b45bd4a9cf9197027f16117adcec3106b))
+
+
+### Features
+
+* AddModule returns module added ([08bbd34](https://github.com/twistapps/modula/commit/08bbd3467b6039c21986bd61ac955587064ef291))
+
 ## [0.7.1](https://github.com/twistapps/modula/compare/0.7.0...0.7.1) (2022-04-21)
 
 
