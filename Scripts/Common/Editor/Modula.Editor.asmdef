@@ -1,8 +1,12 @@
 {
-    "name": "Modula",
-    "rootNamespace": "Modula",
-    "references": [],
-    "includePlatforms": [],
+    "name": "Modula.Editor",
+    "rootNamespace": "Modula.Editor",
+    "references": [
+        "GUID:6da6ac09c43862940a32d34fb1d7c793"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
