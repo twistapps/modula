@@ -1,3 +1,15 @@
+## [0.8.1](https://github.com/twistapps/modula/compare/0.8.0...0.8.1) (2022-05-19)
+
+
+### Bug Fixes
+
+* added asmdef/references ([3df7ea6](https://github.com/twistapps/modula/commit/3df7ea6f272cf807c4217c41c8f086871eba0945))
+* asmdef references ([4539b29](https://github.com/twistapps/modula/commit/4539b29c07f99d79a87c2cc09118899d0f50338e))
+* build failing (editor scripts excluded) ([10e108c](https://github.com/twistapps/modula/commit/10e108c38187561f7bf4c9198520bad895c04633))
+* build fails yet again ([1b4212a](https://github.com/twistapps/modula/commit/1b4212a3e1aeffa23153395ce84349ca18567180))
+* mark TypeList obsolete. ([32f80d8](https://github.com/twistapps/modula/commit/32f80d8332779142d06589058850ed2a6b2bf1d2))
+* Unity <2021.2 compatibility ([419c313](https://github.com/twistapps/modula/commit/419c313a74ec17bc1496cd04082bcdbfa8aa020e))
+
 # [0.8.0](https://github.com/twistapps/modula/compare/0.7.1...0.8.0) (2022-04-29)
 
 
