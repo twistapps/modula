@@ -22,7 +22,7 @@ namespace Modula
         }
 
         public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
-        public virtual TypedList<IModule> RequiredOtherModules { get; } = new();
+        public virtual TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>();
 
         public ModularBehaviour Main => DefaultImplementation.Main;
 
