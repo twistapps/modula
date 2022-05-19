@@ -1,3 +1,11 @@
+## [0.8.2](https://github.com/twistapps/modula/compare/0.8.1...0.8.2) (2022-05-19)
+
+
+### Bug Fixes
+
+* editor gui cleanup ([6d3e04f](https://github.com/twistapps/modula/commit/6d3e04f3c3c759965d1e18b610e91000b3cd3d70))
+* unity older versions compatibility ([4e7d9e1](https://github.com/twistapps/modula/commit/4e7d9e16e6e5b652af92e12560922cfa7444e949))
+
 ## [0.8.1](https://github.com/twistapps/modula/compare/0.8.0...0.8.1) (2022-05-19)
 
 
