@@ -86,9 +86,11 @@ namespace Modula
         private IModule CreateModuleComponent(Type moduleType)
         {
             IModule module;
+            #if UNITY_EDITOR
             if (Application.isEditor && !Application.isPlaying)
                 module = Undo.AddComponent(gameObject, moduleType) as IModule;
             else
+            #endif
                 module = gameObject.AddComponent(moduleType) as IModule;
 
             return module;
@@ -161,6 +163,7 @@ namespace Modula
 
         private void DestroyModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)
         {
+            #if UNITY_EDITOR
             if (Application.isEditor && !Application.isPlaying)
             {
                 var mono = module as MonoBehaviour;
@@ -172,6 +175,9 @@ namespace Modula
             {
                 Destroy(module as MonoBehaviour);
             }
+            #else
+                Destroy(module as MonoBehaviour);
+            #endif
         }
 
         public void RemoveModule(IModule module, ModuleRemoveReason reason = ModuleRemoveReason.NotSpecified)

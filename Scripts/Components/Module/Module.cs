@@ -8,7 +8,7 @@ namespace Modula
     public abstract class Module : MonoBehaviour, IModule
     {
         private ModuleDefaultImplementation _defaultImplementation;
-        public virtual TypeList replaces { get; } = TypeList.None;
+        //public virtual TypeList replaces { get; } = TypeList.None;
 
         // ReSharper disable once MemberCanBePrivate.Global
         protected ModuleDefaultImplementation DefaultImplementation
