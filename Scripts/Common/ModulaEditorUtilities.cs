@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Modula.Scripts.Common
+namespace Modula.Common
 {
     public static class ModulaEditorUtilities
     {
@@ -28,9 +28,11 @@ namespace Modula.Scripts.Common
 
         private static void DestroyComponentBasedOnEnvironment(Component component)
         {
+            #if UNITY_EDITOR
             if (Application.isEditor && !Application.isPlaying)
                 Undo.DestroyObjectImmediate(component);
             else
+            #endif
                 Object.Destroy(component);
         }
     }
