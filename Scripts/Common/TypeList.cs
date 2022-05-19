@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Modula.Common
 {
     [Serializable]
+    [System.Obsolete("Use TypedList instead.")]
     public class TypeList
     {
         [SerializeField] private bool hasTypes;
