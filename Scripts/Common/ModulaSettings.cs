@@ -5,7 +5,7 @@ namespace Modula.Common
 {
     public static class ModulaSettings
     {
-        public const string Component = "Module.";
+        public const string MODULE = "Module.";
         public const string EMPTY_CHOICE = "<Empty>";
         public const string DATA_SUFFIX = "Data";
 
