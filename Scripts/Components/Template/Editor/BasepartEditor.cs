@@ -26,7 +26,7 @@ namespace Modula.Editor
 
             if (_isOptional != basepart.optional)
             {
-                OnModuleSelectionChange(basepart);
+                OnSelectedModulesChange(basepart);
                 _isOptional = basepart.optional;
             }
         }
@@ -62,11 +62,11 @@ namespace Modula.Editor
                     EditorGUI.BeginChangeCheck();
                     _selectedModules[i] = GUILayout.Toggle(_selectedModules[i], current.Name);
                     if (EditorGUI.EndChangeCheck())
-                        OnModuleSelectionChange(basepart);
+                        OnSelectedModulesChange(basepart);
                 }
         }
 
-        private void OnModuleSelectionChange(BasePart basepart)
+        private void OnSelectedModulesChange(BasePart basepart)
         {
             basepart.supports = new List<string>();
             if (basepart.optional) basepart.supports.Add(ModulaSettings.EMPTY_CHOICE);
