@@ -2,7 +2,7 @@
     "name": "Modula.Editor",
     "rootNamespace": "Modula.Editor",
     "references": [
-        "GUID:6da6ac09c43862940a32d34fb1d7c793"
+        "GUID:48b7cef44eb99914981fb1fc7f63ac31"
     ],
     "includePlatforms": [
         "Editor"

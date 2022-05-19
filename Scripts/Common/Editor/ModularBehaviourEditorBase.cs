@@ -4,7 +4,7 @@ using Modula.Common;
 using UnityEditor;
 using UnityEngine;
 
-namespace Modula.Scripts.Common.Editor
+namespace Modula.Editor
 {
     public class ModularBehaviourEditorBase : UnityEditor.Editor
     {
@@ -100,7 +100,7 @@ namespace Modula.Scripts.Common.Editor
                 {
                     GUILayout.BeginVertical("Properties", "Window");
                     var editor = CreateEditor(module as Object);
-                    //editor.OnInspectorGUI();  //replaced with the method below because this has been causing fatal error: StackOverflow
+                    //editor.OnInspectorGUI();
                     editor.DrawDefaultInspector();
                     GUILayout.Space(8);
                     var requiredOthers = module.RequiredOtherModules?.Types;
