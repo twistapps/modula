@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine;
 
 namespace Modula.Common
 {
     public static class ModulaUtilities
     {
         //cache results of GetDerivedFrom() because it's a pretty expensive method
-        private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new();
-
+        //todo: make sure this does not cause fatal error: stack overflow --APPROVED
+        private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new Dictionary<Type, Type[]>();
         public static Type[] GetDerivedFrom<T>(Type[] ignored = null)
         {
             Type[] foundArr;

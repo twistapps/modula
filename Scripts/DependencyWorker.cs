@@ -26,6 +26,7 @@ namespace Modula
                 module.RequiredOtherModules.Contains(m.GetType())).ToArray();
         }
 
+        //todo: make sure this does not cause fatal error: stack overflow --APPROVED
         public static HashSet<IModule> FindDependenciesRecursive(IModule module, HashSet<IModule> dependencies = null)
         {
             dependencies ??= new HashSet<IModule> { module };
