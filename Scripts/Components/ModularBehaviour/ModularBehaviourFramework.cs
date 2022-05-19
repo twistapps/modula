@@ -15,10 +15,6 @@ namespace Modula
         {
             var allInstances = Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
 
-            // return (from component in allInstances 
-            //     let mono = component as MonoBehaviour 
-            //     where mono.gameObject == obj select component).ToList();
-
             var found = new List<T>();
             foreach (var component in allInstances)
             {

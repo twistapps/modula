@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Modula.Common;
-using Modula.Scripts.Common;
-using Modula.Scripts.Common.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -33,7 +31,8 @@ namespace Modula.Editor
             }
             else
             {
-                if (!DrawBanner())
+                DrawBanner(out bool bannerDrawn);
+                if (!bannerDrawn)
                     EditorGUILayout.HelpBox(template.scriptable.name + " Template",
                         MessageType.Info);
 
@@ -52,10 +51,14 @@ namespace Modula.Editor
                 InitializeDataLayer();
         }
 
-        private bool DrawBanner()
+        private void DrawBanner(out bool bannerDrawn)
         {
             var banner = template.scriptable.banner;
-            if (!banner) return false;
+            if (!banner)
+            {
+                bannerDrawn = false;
+                return;
+            }
 
             var widthRatio = .9f;
             var minWidth = 340;
@@ -68,7 +71,7 @@ namespace Modula.Editor
             EditorGUI.DrawPreviewTexture(new Rect(Screen.width * (1 - width / Screen.width) * .5f, 0, width, height),
                 banner);
             GUILayout.Space(height);
-            return true;
+            bannerDrawn = true;
         }
 
         private void DrawToolbox()
@@ -157,55 +160,55 @@ namespace Modula.Editor
                 _foldoutActive[i] = EditorGUILayout.Foldout(_foldoutActive[i], basepart.name);
                 EditorGUI.BeginChangeCheck();
                 _selections[i] =
-                    //basepart.supports[EditorGUILayout.Popup(basepart.name, selectedIndex, basepart.supports.ToArray())];
                     basepart.supports[EditorGUILayout.Popup(selectedIndex, basepart.supports.ToArray())];
                 if (EditorGUI.EndChangeCheck()) HandleSelectionChange(i);
                 GUILayout.EndHorizontal();
 
-                if (_foldoutActive[i])
+                if (!_foldoutActive[i]) continue;
+                // Draw Foldouts
+                
+                GUILayout.Space(3);
+                if (_selections.Types[i] == null) continue;
+                var module = template.GetModule(_selections.Types[i]);
+                if (module == null)
                 {
+                    EditorGUILayout.HelpBox("Missing Component", MessageType.Warning);
+                    var missingModuleName = basepart.supports[selectedIndex];
+                    if (GUILayout.Button("Add component: " + missingModuleName))
+                        template.AddModule(ModulaUtilities.GetTypeByName<IModule>(missingModuleName));
+                    continue;
+                }
+
+                var dependencies = new List<IModule>(); // { module };
+                dependencies.AddRange(DependencyWorker.FindDependenciesRecursive(module));
+                dependencies = dependencies.Where(dep =>
+                        _selections.Types.All(sel => sel == module.GetType() || sel != dep.GetType()))
+                    .ToList(); // - hide duplicates
+
+                var first = true;
+                foreach (var dep in dependencies)
+                {
+                    if (!dep.ShouldSerialize()) continue;
+                    var style = first ? "Window" : "CN Box";
                     GUILayout.Space(3);
-                    if (_selections.Types[i] == null) continue;
-                    var module = template.GetModule(_selections.Types[i]);
-                    if (module == null)
-                    {
-                        EditorGUILayout.HelpBox("Missing Component", MessageType.Warning);
-                        var missingModuleName = basepart.supports[selectedIndex];
-                        if (GUILayout.Button("Add component: " + missingModuleName))
-                            template.AddModule(ModulaUtilities.GetTypeByName<IModule>(missingModuleName));
-                        continue;
-                    }
-
-                    var dependencies = new List<IModule>(); // { module };
-                    dependencies.AddRange(DependencyWorker.FindDependenciesRecursive(module));
-                    dependencies = dependencies.Where(dep =>
-                            _selections.Types.All(sel => sel == module.GetType() || sel != dep.GetType()))
-                        .ToList(); // - hide duplicates
-
-                    var first = true;
-                    foreach (var dep in dependencies)
-                    {
-                        if (!dep.ShouldSerialize()) continue;
-                        var style = first ? "Window" : "CN Box";
-                        GUILayout.Space(3);
-                        GUILayout.BeginVertical(style);
-                        if (first) GUILayout.Space(-18);
-                        //string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
-                        //GUILayout.Label(dep.GetType().Name);
+                    GUILayout.BeginVertical(style);
+                    if (first) GUILayout.Space(-18);
+                    //string labelText = dep == dependencies[0] ? "Properties" : dep.GetType().Name;
+                    //GUILayout.Label(dep.GetType().Name);
                         
-                        var editor = CreateEditor(dep as Object);
-                        //editor.OnInspectorGUI(); //replaced with the method below because this has been causing fatal error: StackOverflow
-                        EditorGUI.indentLevel++;
-                        editor.DrawDefaultInspector();
-                        EditorGUI.indentLevel--;
+                    //todo: make sure this does not cause fatal error: stack overflow
+                    var editor = CreateEditor(dep as Object);
+                    //editor.OnInspectorGUI();
+                    EditorGUI.indentLevel++;
+                    editor.DrawDefaultInspector();
+                    EditorGUI.indentLevel--;
 
-                        GUILayout.Space(3);
-                        GUILayout.EndVertical();
+                    GUILayout.Space(3);
+                    GUILayout.EndVertical();
 
-                        if (first) GUILayout.Space(10);
+                    if (first) GUILayout.Space(10);
 
-                        first = false;
-                    }
+                    first = false;
                 }
             }
         }

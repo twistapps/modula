@@ -1,6 +1,4 @@
 ﻿using Modula.Common;
-using Modula.Scripts.Common;
-using Modula.Scripts.Common.Editor;
 using UnityEditor;
 using UnityEngine;
 
