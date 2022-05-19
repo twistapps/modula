@@ -9,7 +9,7 @@ namespace Modula
     public class BasePart : ScriptableObject
     {
         public new string name = "Basepart";
-        public List<string> supports = new List<string>();
+        [HideInInspector] public List<string> supports = new List<string>();
 
         /// <summary>
         ///     Set this to true if this part can be set to "None" thus module is removed.
