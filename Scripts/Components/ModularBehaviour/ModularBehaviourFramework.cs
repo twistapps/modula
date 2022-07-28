@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 
 namespace Modula
@@ -13,8 +14,12 @@ namespace Modula
         /// <returns>List of MonoBehaviours deriving from T in gameObject</returns>
         public static List<T> FindComponents<T>(this GameObject obj)
         {
-            var allInstances = Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
 
+            //prefab mode support
+            var allInstances = PrefabStageUtility.GetCurrentPrefabStage() != null 
+                ? Resources.FindObjectsOfTypeAll<MonoBehaviour>().OfType<T>() 
+                : Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
+            
             var found = new List<T>();
             foreach (var component in allInstances)
             {
