@@ -1,3 +1,10 @@
+## [0.8.5](https://github.com/twistapps/modula/compare/0.8.4...0.8.5) (2022-07-28)
+
+
+### Bug Fixes
+
+* typo in classname ([2c00715](https://github.com/twistapps/modula/commit/2c00715a7b1663d449181a77d238edcd2e322fc5))
+
 ## [0.8.4](https://github.com/twistapps/modula/compare/0.8.3...0.8.4) (2022-07-28)
 
 
