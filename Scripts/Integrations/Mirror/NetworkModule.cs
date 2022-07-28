@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Modula
 {
-    public abstract class Module : NetworkBehaviour, IModule
+    public abstract class NetworkModule : NetworkBehaviour, IModule
     {
         private ModuleDefaultImplementation _defaultImplementation;
         //public virtual TypeList replaces { get; } = TypeList.None;
