@@ -1,3 +1,13 @@
+## [0.8.3](https://github.com/twistapps/modula/compare/0.8.2...0.8.3) (2022-07-28)
+
+
+### Bug Fixes
+
+* Action reference ([2b247a8](https://github.com/twistapps/modula/commit/2b247a827280bf58b86202a9c183492d2d3db427))
+* move asmdef to root ([16ad554](https://github.com/twistapps/modula/commit/16ad5544ab8c9ecb973cbe724733e6a1808fed60))
+* remove unused folder ([6328973](https://github.com/twistapps/modula/commit/6328973d179657207ad1c94140565f15f233ae83))
+* update modules only on active gameobjects ([21f8b79](https://github.com/twistapps/modula/commit/21f8b7930b64aee76f62b21d25d631a966dca998))
+
 ## [0.8.2](https://github.com/twistapps/modula/compare/0.8.1...0.8.2) (2022-05-19)
 
 
