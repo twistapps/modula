@@ -1,3 +1,10 @@
+## [0.8.4](https://github.com/twistapps/modula/compare/0.8.3...0.8.4) (2022-07-28)
+
+
+### Bug Fixes
+
+* Mirror integration compile errors ([59f7f34](https://github.com/twistapps/modula/commit/59f7f349d738d89a408385b1dff9284f85764aa6))
+
 ## [0.8.3](https://github.com/twistapps/modula/compare/0.8.2...0.8.3) (2022-07-28)
 
 
