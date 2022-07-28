@@ -1,3 +1,10 @@
+# [0.9.0](https://github.com/twistapps/modula/compare/0.8.5...0.9.0) (2022-07-28)
+
+
+### Features
+
+* prefab mode support ([6aae0ec](https://github.com/twistapps/modula/commit/6aae0ece6a70dde447acce4d81a1c979ad20b5d6))
+
 ## [0.8.5](https://github.com/twistapps/modula/compare/0.8.4...0.8.5) (2022-07-28)
 
 
