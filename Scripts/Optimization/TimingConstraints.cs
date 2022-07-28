@@ -5,7 +5,7 @@ namespace Modula.Optimization
 {
     public class TimingConstraints
     {
-        private readonly Action _constrainedAction;
+        private readonly System.Action _constrainedAction;
 
         private bool _constrainFrames, _constrainSeconds;
         private int _currentFrame;
@@ -14,7 +14,7 @@ namespace Modula.Optimization
 
         private float _timer;
 
-        public TimingConstraints(Action actionToConstrain)
+        public TimingConstraints(System.Action actionToConstrain)
         {
             _constrainedAction = actionToConstrain;
         }
