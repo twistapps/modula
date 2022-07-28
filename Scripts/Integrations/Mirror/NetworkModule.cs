@@ -1,14 +1,18 @@
 #if MIRROR
 using System;
 using Mirror;
-using Modula.Optimizations;
+using Modula.Common;
+using Modula.Optimization;
+using UnityEngine;
 
 namespace Modula
 {
-    public abstract class NetworkModule : NetworkBehaviour, IModule
+    public abstract class Module : NetworkBehaviour, IModule
     {
         private ModuleDefaultImplementation _defaultImplementation;
+        //public virtual TypeList replaces { get; } = TypeList.None;
 
+        // ReSharper disable once MemberCanBePrivate.Global
         protected ModuleDefaultImplementation DefaultImplementation
         {
             get { return _defaultImplementation ??= new ModuleDefaultImplementation(this); }
@@ -20,18 +24,18 @@ namespace Modula
         }
 
         public TimingConstraints UpdateInvocationConstraints => DefaultImplementation.UpdateConstraints;
-        public virtual TypeList RequiredOtherModules { get; } = TypeList.None;
+        public virtual TypedList<IModule> RequiredOtherModules { get; } = new TypedList<IModule>();
 
-        public ModularBehaviour Main { get; }
+        public ModularBehaviour Main => DefaultImplementation.Main;
 
         public void OnAdd()
         {
             DefaultImplementation.OnAdd();
         }
 
-        public void OnModuleAdded(Type moduleType)
+        public void AddModule(Type moduleType)
         {
-            DefaultImplementation.OnModuleAdded(moduleType);
+            DefaultImplementation.AddModule(moduleType);
         }
 
         public string GetName()
@@ -44,7 +48,17 @@ namespace Modula
             return DefaultImplementation.GetData();
         }
 
-        public virtual void ManagedUpdate()
+        public void ManagedUpdate()
+        {
+            ModuleUpdate();
+        }
+
+        public virtual bool ShouldSerialize()
+        {
+            return true;
+        }
+
+        protected virtual void ModuleUpdate()
         {
         }
     }
