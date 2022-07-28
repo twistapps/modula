@@ -26,7 +26,8 @@ namespace Modula
 
         private void UpdateModules(bool shouldResolveDependencies = true)
         {
-            attachments = gameObject.FindComponents<IModule>();
+            if (isActiveAndEnabled)
+                attachments = gameObject.FindComponents<IModule>();
 
             if (shouldResolveDependencies || couldBeModifiedFromEditorUI)
                 if (DependencyWorker.ResolveDependencies(attachments, this))
