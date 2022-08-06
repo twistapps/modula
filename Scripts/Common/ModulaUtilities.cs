@@ -11,7 +11,7 @@ namespace Modula.Common
         //cache results of GetDerivedFrom() because it's a pretty expensive method
         //todo: make sure this does not cause fatal error: stack overflow --APPROVED
         private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new Dictionary<Type, Type[]>();
-        public static Type[] GetDerivedFrom<T>(Type[] ignored = null)
+        public static Type[] GetDerivedFrom<T>(params Type[] ignored)
         {
             Type[] foundArr;
             if (DerivativesDictionary.ContainsKey(typeof(T)))
