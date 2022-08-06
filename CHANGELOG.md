@@ -1,3 +1,16 @@
+# [0.10.0](https://github.com/twistapps/modula/compare/0.9.0...0.10.0) (2022-08-06)
+
+
+### Bug Fixes
+
+* prefab mode ([b461590](https://github.com/twistapps/modula/commit/b461590a2f8e2e291d3133a4af9fea45ab0d2a3d))
+* usability ([d3125e5](https://github.com/twistapps/modula/commit/d3125e54b5c2830df849fd5e14c7cfcfaa229942))
+
+
+### Features
+
+* logWarning (before Logger had LogError only) ([b88d054](https://github.com/twistapps/modula/commit/b88d05427e6d674f5023c2b80128e6b542f60ed9))
+
 # [0.9.0](https://github.com/twistapps/modula/compare/0.8.5...0.9.0) (2022-07-28)
 
 
