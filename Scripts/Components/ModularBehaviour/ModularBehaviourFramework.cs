@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.SceneManagement;
+
 using UnityEngine;
 
 namespace Modula
@@ -16,7 +16,7 @@ namespace Modula
         {
 
             //prefab mode support
-            var allInstances = PrefabStageUtility.GetCurrentPrefabStage() != null 
+            var allInstances = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null 
                 ? Resources.FindObjectsOfTypeAll<MonoBehaviour>().OfType<T>() 
                 : Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
             
