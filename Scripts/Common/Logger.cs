@@ -74,5 +74,16 @@ namespace Modula.Common
         {
             LogError(code, obj, context?.Name, shouldLog);
         }
+
+        public static void LogWarning(ErrorCode code, GameObject obj, string context = null, bool shouldLog = true)
+        {
+            if (!shouldLog) return;
+            Debug.LogWarning(GetErrorMessageByCode(code, obj, context), obj);
+        }
+        
+        public static void LogWarning(ErrorCode code, GameObject obj, Type context = null, bool shouldLog = true)
+        {
+            LogWarning(code, obj, context?.Name, shouldLog);
+        }
     }
 }
