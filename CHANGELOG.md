@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/twistapps/modula/compare/0.10.0...0.10.1) (2022-08-16)
+
+
+### Bug Fixes
+
+* unity <2021.2 compatibility ([3a21772](https://github.com/twistapps/modula/commit/3a21772112fd7324c537f5b7c32cc77ad7ac668f))
+
 # [0.10.0](https://github.com/twistapps/modula/compare/0.9.0...0.10.0) (2022-08-06)
 
 
