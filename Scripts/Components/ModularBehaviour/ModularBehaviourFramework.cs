@@ -2,6 +2,7 @@
 using System.Linq;
 
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
 namespace Modula
 {
@@ -15,15 +16,20 @@ namespace Modula
         public static List<T> FindComponents<T>(this GameObject obj)
         {
 
+            #if UNITY_2021_2_OR_NEWER
             //prefab mode support
             var allInstances = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null 
                 ? Resources.FindObjectsOfTypeAll<MonoBehaviour>().OfType<T>() 
                 : Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
+            #else
+            var allInstances = Object.FindObjectsOfType<MonoBehaviour>().OfType<T>();
+            #endif
             
             var found = new List<T>();
             foreach (var component in allInstances)
             {
                 var mono = component as MonoBehaviour;
+                Debug.Assert(mono != null, nameof(mono) + " != null");
                 if (mono.gameObject != obj) continue;
                 found.Add(component);
             }
