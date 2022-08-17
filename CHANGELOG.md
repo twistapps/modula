@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/twistapps/modula/compare/0.10.1...0.11.0) (2022-08-17)
+
+
+### Features
+
+* add scripting defines ([#7](https://github.com/twistapps/modula/issues/7)) ([7cc2fd0](https://github.com/twistapps/modula/commit/7cc2fd0149aa543c1a9200d1fb4a2d55d19d0677))
+
 ## [0.10.1](https://github.com/twistapps/modula/compare/0.10.0...0.10.1) (2022-08-16)
 
 
