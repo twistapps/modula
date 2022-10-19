@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/twistapps/modula/compare/0.12.0...0.12.1) (2022-10-19)
+
+
+### Bug Fixes
+
+* commented unused code ([b953656](https://github.com/twistapps/modula/commit/b953656d035f3576630423323c3ece0677c88819))
+
 # [0.12.0](https://github.com/twistapps/modula/compare/0.11.0...0.12.0) (2022-10-19)
 
 
