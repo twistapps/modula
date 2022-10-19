@@ -47,10 +47,10 @@ namespace Modula.Optimization
             _constrainedAction();
         }
 
-        public void Update()
-        {
-            Update(Time.deltaTime);
-        }
+        // public void Update()
+        // {
+        //     Update(Time.deltaTime);
+        // }
 
         public void Update(float deltaTime)
         {
