@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/twistapps/modula/compare/0.11.0...0.12.0) (2022-10-19)
+
+
+### Features
+
+* Modula initial setup ([4c290f4](https://github.com/twistapps/modula/commit/4c290f4a3676b273eb546f9c7525c824a8727625))
+
 # [0.11.0](https://github.com/twistapps/modula/compare/0.10.1...0.11.0) (2022-08-17)
 
 
